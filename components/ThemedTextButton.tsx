@@ -1,14 +1,13 @@
-import { View, type ViewProps } from "react-native";
-
 import { useThemeColor } from "@/hooks/useThemeColor";
+import TextButton, { TextButtonProps } from "./ui/TextButton";
 
-export type ThemedViewProps = ViewProps & {
+export type ThemedViewProps = TextButtonProps & {
   lightColor?: string;
   darkColor?: string;
   type?: "background" | "border";
 };
 
-export function ThemedView({
+export function ThemedTextButton({
   style,
   lightColor,
   darkColor,
@@ -18,7 +17,7 @@ export function ThemedView({
   const color = useThemeColor({ light: lightColor, dark: darkColor }, type);
 
   return (
-    <View
+    <TextButton
       style={[
         type === "background" ? { backgroundColor: color } : undefined,
         type === "border"
