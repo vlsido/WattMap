@@ -1,26 +1,24 @@
-interface Point {
-  latitude: number;
-  longitude: number;
-}
+import { LatLng } from "react-native-maps";
 
 type Country = "Estonia" | "Latvia" | "Lithuania";
 
-type Connector = "CHAdeMO" | "Type 2" | "Combo CCS";
+export type ConnectorType = "CHAdeMO" | "Type 2" | "Combo CCS";
 
-type StationStatus = "AVAILABLE" | "UNAVAILABLE" | "IN USE";
+export type ConnectorStatus = "AVAILABLE" | "UNAVAILABLE" | "IN USE";
 
-interface Station {
-  connectorType: Connector;
-  status: StationStatus;
+interface Connector {
+  connectorType: ConnectorType;
+  status: ConnectorStatus;
+  maxPowerOutputKW: number;
 }
 
-interface Location {
+export interface Location {
   id: number;
   name: string;
   country: Country;
   address: string;
-  point: Point;
-  stations: Station[];
+  point: LatLng;
+  connectors: Connector[];
 }
 
 export const locationList: Location[] = [
@@ -30,10 +28,16 @@ export const locationList: Location[] = [
     country: "Estonia",
     address: "Väike Rannavärav 6, Tallinn, Estonia",
     point: { latitude: 59.441466, longitude: 24.751405 },
-    stations: [
+    connectors: [
       {
         connectorType: "CHAdeMO",
         status: "AVAILABLE",
+        maxPowerOutputKW: 50,
+      },
+      {
+        connectorType: "CHAdeMO",
+        status: "AVAILABLE",
+        maxPowerOutputKW: 50,
       },
     ],
   },
@@ -43,10 +47,21 @@ export const locationList: Location[] = [
     country: "Estonia",
     address: "Vabaduse väljak 9, Tallinn, Estonia",
     point: { latitude: 59.433014, longitude: 24.744803 },
-    stations: [
+    connectors: [
       {
         connectorType: "CHAdeMO",
         status: "UNAVAILABLE",
+        maxPowerOutputKW: 50,
+      },
+      {
+        connectorType: "CHAdeMO",
+        status: "IN USE",
+        maxPowerOutputKW: 50,
+      },
+      {
+        connectorType: "Type 2",
+        status: "AVAILABLE",
+        maxPowerOutputKW: 47,
       },
     ],
   },
