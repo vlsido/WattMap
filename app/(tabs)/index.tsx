@@ -31,7 +31,6 @@ export default function Index() {
           longitudeDelta: 0.0421,
         }}
         toolbarEnabled={false}
-        loadingEnabled={true}
       >
         {locationList.map((location, index) => (
           <Marker
