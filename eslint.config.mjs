@@ -1,9 +1,11 @@
 import globals from "globals";
 import tseslint from "typescript-eslint";
 import react from "eslint-plugin-react";
+import pluginQuery from "@tanstack/eslint-plugin-query";
 import eslintConfigPrettierFlat from "eslint-config-prettier/flat";
 
 export default [
+  ...pluginQuery.configs["flat/recommended"],
   ...tseslint.configs.recommended,
   eslintConfigPrettierFlat,
   {
