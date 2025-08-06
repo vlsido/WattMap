@@ -21,17 +21,23 @@ export function ThemedPressable({
   return (
     <Pressable
       style={(state) => {
+        const { pressed } = state;
+
+        const pressedStyle = { opacity: pressed ? 0.75 : 1 };
+
         let baseStyle = {};
 
-        if (type === "background") baseStyle = { backgroundColor: color };
-        else if (type === "border")
+        if (type === "background") {
+          baseStyle = { backgroundColor: color };
+        } else if (type === "border") {
           baseStyle = { borderWidth: 0.5, borderColor: color };
+        }
 
         // If style is a function, call it with state; else just use it
         const resolvedStyle =
           typeof style === "function" ? style(state) : style;
 
-        return [baseStyle, resolvedStyle];
+        return [pressedStyle, baseStyle, resolvedStyle];
       }}
       {...otherProps}
     />
