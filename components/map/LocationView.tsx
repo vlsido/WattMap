@@ -1,4 +1,3 @@
-import { ConnectorType, Location } from "@/LocationList";
 import { Linking, Platform, Pressable, StyleSheet, View } from "react-native";
 import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
 import { ThemedText } from "../ThemedText";
@@ -8,6 +7,8 @@ import ConnectorIcon from "../connector/ConnectorIcon";
 import { LatLng } from "react-native-maps";
 import { ThemedTextButton } from "../ThemedTextButton";
 import { Colors } from "@/constants/Colors";
+import { useRouter } from "expo-router";
+import { ConnectorType, Location } from "@/types/common";
 
 interface LocationViewProps {
   location: Location | null;
@@ -27,32 +28,30 @@ function openNavigation(latLng: LatLng) {
 }
 
 function LocationView(props: LocationViewProps) {
+  const router = useRouter();
+
   if (props.location === null) return null;
 
-  let available = 0;
-
-  const availableByType = props.location.connectors.reduce(
+  const availableByType = props.location.chargers.reduce(
     (acc, value) => {
-      const existing = acc.find(
-        (item) => item.connectorType === value.connectorType,
-      );
+      value.connectors.forEach((connector) => {
+        const existing = acc.find(
+          (item) => item.connectorType === connector.connectorType,
+        );
 
-      if (value.status === "AVAILABLE") {
-        available++;
-      }
-
-      if (existing) {
-        existing.total++;
-        if (value.status === "AVAILABLE") {
-          existing.available++;
+        if (existing) {
+          existing.total++;
+          if (connector.status === "AVAILABLE") {
+            existing.available++;
+          }
+        } else {
+          acc.push({
+            connectorType: connector.connectorType,
+            total: 1,
+            available: connector.status === "AVAILABLE" ? 1 : 0,
+          });
         }
-      } else {
-        acc.push({
-          connectorType: value.connectorType,
-          total: 1,
-          available: value.status === "AVAILABLE" ? 1 : 0,
-        });
-      }
+      });
 
       return acc;
     },
@@ -68,7 +67,12 @@ function LocationView(props: LocationViewProps) {
               { opacity: pressed ? 0.75 : 1 },
               styles.bodyContainer,
             ]}
-            onPress={() => {}}
+            onPress={() =>
+              router.navigate({
+                pathname: "/location-details",
+                params: { location: JSON.stringify(props.location) },
+              })
+            }
           >
             <View style={styles.row}>
               <MaterialCommunityIcons
@@ -79,10 +83,6 @@ function LocationView(props: LocationViewProps) {
               <View style={{ flexShrink: 1 }}>
                 <ThemedText type="subtitle">{props.location.name}</ThemedText>
                 <ThemedText type="default">{props.location.address}</ThemedText>
-                <ThemedText colorType="warnText">
-                  {available} {available === 1 ? "Connector" : "Connectors"}{" "}
-                  Available
-                </ThemedText>
               </View>
             </View>
             <ThemedView style={[styles.connectorsContainer]} type="border">
@@ -97,6 +97,7 @@ function LocationView(props: LocationViewProps) {
                       status={
                         connector.available === 0 ? "UNAVAILABLE" : "AVAILABLE"
                       }
+                      size={28}
                     />
                     <View>
                       <ThemedText>{connector.connectorType}</ThemedText>
@@ -126,7 +127,7 @@ function LocationView(props: LocationViewProps) {
             style={styles.buttonContainer}
             textStyle={styles.buttonText}
             rightSideIcon="arrow-right"
-            rightSideIconColor="white"
+            rightSideIconColor="black"
             rightSideIconSize={24}
           />
         </ThemedView>
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
   },
   bodyContainer: {
     paddingVertical: 20,
-    paddingHorizontal: 40,
+    paddingHorizontal: 20,
     gap: 20,
   },
   row: {
@@ -186,7 +187,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: "center",
-    color: "white",
+    color: "black",
     fontWeight: 600,
     fontSize: 18,
   },
