@@ -18,7 +18,11 @@ type IconSymbolName = keyof typeof MAPPING;
  */
 const MAPPING = {
   "map.fill": "map",
+  "list.bullet": "format-list-bulleted",
   "person.crop.circle.fill": "account-circle",
+  "location.fill": "navigation-variant",
+  "banknote.fill": "cash",
+  "chevron.right": "chevron-right",
   "ev.charger.fill": "ev-station",
   "ev.plug.ac.type.2.fill": "ev-plug-type2",
   "ev.plug.dc.chademo.fill": "ev-plug-chademo",
