@@ -1,4 +1,3 @@
-import { Location, locationList } from "@/LocationList";
 import { StyleSheet } from "react-native";
 import {
   SafeAreaView,
@@ -8,15 +7,18 @@ import MapView, { Marker } from "react-native-maps";
 import LocationView from "@/components/map/LocationView";
 import { useState } from "react";
 import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
+import { useLocations } from "@/hooks/useLocations";
+import { Location } from "@/types/common";
 
 export default function Index() {
+  const locations = useLocations();
+
   const insets = useSafeAreaInsets();
+  const bottom = useBottomTabOverflow();
 
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(
     null,
   );
-
-  const bottom = useBottomTabOverflow();
 
   return (
     <SafeAreaView
@@ -32,17 +34,18 @@ export default function Index() {
         }}
         toolbarEnabled={false}
       >
-        {locationList.map((location, index) => (
-          <Marker
-            key={index}
-            coordinate={location.point}
-            title={location.name}
-            description={location.address}
-            image={require("../../assets/images/marker.png")}
-            onSelect={() => setSelectedLocation(location)}
-            onDeselect={() => setSelectedLocation(null)}
-          />
-        ))}
+        {locations.isSuccess &&
+          locations.data.map((location, index) => (
+            <Marker
+              key={index}
+              coordinate={location.point}
+              title={location.name}
+              description={location.address}
+              image={require("../../assets/images/marker.png")}
+              onSelect={() => setSelectedLocation(location)}
+              onDeselect={() => setSelectedLocation(null)}
+            />
+          ))}
       </MapView>
       <LocationView location={selectedLocation} />
     </SafeAreaView>
