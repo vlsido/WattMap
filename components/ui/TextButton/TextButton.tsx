@@ -10,7 +10,6 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export interface TextButtonProps {
-  testID: string;
   text: string;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
@@ -43,6 +42,8 @@ function TextButton(props: TextButtonProps) {
           style={props.activityIndicatorViewStyle}
           color={props.activityIndicatorColor ?? "white"}
           size={props.activityIndicatorSize ?? "small"}
+          accessible={true}
+          accessibilityRole="progressbar"
         />
       </View>
     );
@@ -50,7 +51,6 @@ function TextButton(props: TextButtonProps) {
 
   return (
     <Pressable
-      testID={props.testID}
       style={({ pressed }) => [
         props.style,
         { paddingRight: props.leftSideIconSize },
@@ -58,6 +58,7 @@ function TextButton(props: TextButtonProps) {
         { opacity: pressed ? 0.75 : 1 },
       ]}
       onPress={props.onPress}
+      accessibilityRole="button"
       disabled={props.disabledBool}
       hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
       accessibilityLabel={props.label}
@@ -67,6 +68,7 @@ function TextButton(props: TextButtonProps) {
           name={props.leftSideIcon}
           size={props.leftSideIconSize}
           color={props.leftSideIconColor}
+          testID="icon-left"
         />
       )}
       <Text

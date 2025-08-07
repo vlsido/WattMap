@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import { ThemedText } from "../ThemedText";
-import ConnectorView from "./ConnectorView";
+import ConnectorView from "../ConnectorView";
 import { Connector } from "@/types/common";
 
 interface ChargerProps {

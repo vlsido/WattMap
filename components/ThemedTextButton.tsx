@@ -1,5 +1,5 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
-import TextButton, { TextButtonProps } from "./ui/TextButton";
+import TextButton, { TextButtonProps } from "./ui/TextButton/TextButton";
 
 export type ThemedViewProps = TextButtonProps & {
   lightColor?: string;

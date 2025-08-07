@@ -1,4 +1,4 @@
-import ChargerView from "@/components/location-details/ChargerView";
+import ChargerView from "@/components/location-details/ChargerView/ChargerView";
 import SwipeAction from "@/components/ui/SwipeAction";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";

@@ -127,7 +127,7 @@ export default function Charging() {
 
   const handleDisconnect = useCallback(() => {
     stopCharging(sessionId);
-    router.dismiss();
+    router.dismissAll();
   }, [sessionId]);
 
   return (
@@ -144,7 +144,7 @@ export default function Charging() {
         <View style={styles.carImageContainer}>
           <Image
             style={styles.carImage}
-            source={require("../assets/images/ev-car.png")}
+            source={require("@/assets/images/ev-car.png")}
           />
         </View>
         <View style={styles.header}>

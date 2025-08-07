@@ -1,4 +1,10 @@
-import Animated, { CSSAnimationKeyframes } from "react-native-reanimated";
+import Animated, {
+  runOnUI,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+} from "react-native-reanimated";
 import { StyleSheet, View } from "react-native";
 import { ThemedText } from "../ThemedText";
 import ConnectorIcon from "../connector/ConnectorIcon";
@@ -6,8 +12,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { IconSymbol } from "../ui/IconSymbol";
 import { ThemedPressable } from "../ThemedPressable";
 import { Connector, ConnectorStatus, ConnectorType } from "@/types/common";
-import { useThemeColor } from "@/hooks/useThemeColor";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { useEffect } from "react";
 
 interface ConnectorProps {
   id: number;
@@ -20,6 +26,9 @@ interface ConnectorProps {
 }
 
 function ConnectorView(props: ConnectorProps) {
+  const scale = useSharedValue<number>(1);
+  const opacity = useSharedValue<number>(1);
+
   const themeColors = useThemeColors();
 
   let statusColor = themeColors.primaryGreen;
@@ -30,16 +39,25 @@ function ConnectorView(props: ConnectorProps) {
     statusColor = themeColors.primaryRed;
   }
 
-  const ping: CSSAnimationKeyframes = {
-    from: {
-      transform: [{ scale: 1 }],
-      opacity: 1,
-    },
-    to: {
-      transform: [{ scale: 0.9 }],
-      opacity: 0.5,
-    },
-  };
+  useEffect(() => {
+    if (props.status === "AVAILABLE") {
+      runOnUI(() => {
+        scale.value = withRepeat(withTiming(0.9, { duration: 1000 }), 0, true);
+        opacity.value = withRepeat(
+          withTiming(0.5, { duration: 1000 }),
+          0,
+          true,
+        );
+      })();
+    }
+  }, []);
+
+  const pingAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+      opacity: opacity.value,
+    };
+  });
 
   return (
     <ThemedPressable
@@ -53,6 +71,7 @@ function ConnectorView(props: ConnectorProps) {
           borderColor: themeColors.border,
         },
       ]}
+      accessibilityRole="button"
       disabled={props.status !== "AVAILABLE"}
       onPress={() =>
         props.onSelect({
@@ -77,15 +96,9 @@ function ConnectorView(props: ConnectorProps) {
             <Animated.View
               style={[
                 styles.ellipse,
+                pingAnimatedStyle,
                 {
                   backgroundColor: statusColor,
-                  animationName: ping,
-                  animationDuration: "1s",
-                  animationIterationCount: "infinite",
-                  animationTimingFunction: "ease-in-out",
-                  animationDirection: "alternate",
-                  animationPlayState:
-                    props.status === "AVAILABLE" ? "running" : "paused",
                 },
               ]}
             />
