@@ -6,7 +6,7 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import { Colors } from "@/constants/Colors";
 import { Connector, Location } from "@/types/common";
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   LayoutChangeEvent,
   SafeAreaView,
@@ -60,7 +60,7 @@ export default function LocationDetails() {
     >
       <ThemedView style={styles.container}>
         <View style={styles.screenActionsContainer}>
-          <View style={[styles.row, styles.gap]}>
+          <ThemedView style={[styles.row, styles.gap]}>
             <IconSymbol
               name={r === "LIST" ? "list.bullet" : "map.fill"}
               size={28}
@@ -71,7 +71,7 @@ export default function LocationDetails() {
                 {r === "LIST" ? "Back to List" : "Back to Map"}
               </ThemedText>
             </Link>
-          </View>
+          </ThemedView>
           <View style={[styles.row, styles.gap]}>
             <IconSymbol
               name={r === "LIST" ? "map.fill" : "list.bullet"}
@@ -83,10 +83,12 @@ export default function LocationDetails() {
             </Link>
           </View>
         </View>
-        <View style={styles.header}>
-          <ThemedText>{locationObject.name}</ThemedText>
-        </View>
         <ScrollView contentContainerStyle={[styles.gap, { padding: 10 }]}>
+          <View style={styles.header}>
+            <ThemedText type="defaultSemiBold">
+              {locationObject.name}
+            </ThemedText>
+          </View>
           {locationObject.chargers.map((charger) => (
             <ChargerView
               key={charger.id}
@@ -119,11 +121,11 @@ export default function LocationDetails() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 24,
   },
   screenActionsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    paddingVertical: 10,
     paddingHorizontal: 20,
   },
   row: {
