@@ -3,15 +3,19 @@ import { ThemedView } from "../ThemedView";
 import { ThemedText } from "../ThemedText";
 import ConnectorIcon from "../connector/ConnectorIcon";
 import { Colors } from "@/constants/Colors";
-import { Link } from "expo-router";
 import { IconSymbol } from "../ui/IconSymbol";
 import { ConnectorType, Location } from "@/types/common";
+import { ThemedPressable } from "../ThemedPressable";
+import { openNavigation } from "@/helpers/helperFunctions";
+import { useRouter } from "expo-router";
 
 interface LocationListItemProps {
   item: Location;
 }
 
 function LocationListItem(props: LocationListItemProps) {
+  const router = useRouter();
+
   const availableByType = props.item.chargers.reduce(
     (acc, value) => {
       value.connectors.forEach((connector) => {
@@ -39,11 +43,18 @@ function LocationListItem(props: LocationListItemProps) {
   );
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedPressable
+      style={styles.container}
+      onPress={() =>
+        router.navigate({
+          pathname: "/location-details",
+          params: { location: JSON.stringify(props.item), r: "LIST" },
+        })
+      }
+    >
       <View>
         <View style={[styles.row, { justifyContent: "space-between" }]}>
           <ThemedText type="defaultSemiBold">{props.item.name}</ThemedText>
-          <ThemedText>(1.2 km)</ThemedText>
         </View>
         <View style={[styles.row, { gap: 8 }]}>
           <ThemedText type="small" style={{ opacity: 0.5 }}>
@@ -82,30 +93,20 @@ function LocationListItem(props: LocationListItemProps) {
           { justifyContent: "space-between", alignItems: "center" },
         ]}
       >
-        <View style={styles.detailsLinkContainer}>
-          <Link
-            href={{
-              pathname: "/location-details",
-              params: { location: JSON.stringify(props.item), r: "LIST" },
-            }}
-            style={styles.linkText}
-          >
-            Details
-          </Link>
-        </View>
-        <View style={styles.mapLinkContainer}>
-          <Link
-            href={{
-              pathname: "/(tabs)",
-              params: { location: JSON.stringify(props.item) },
-            }}
-            style={styles.linkText}
-          >
-            <IconSymbol name="location.fill" size={24} color="black" />
-          </Link>
-        </View>
+        <ThemedText
+          style={{ opacity: 0.5, alignSelf: "center" }}
+          type="smallSemiBold"
+        >
+          press to open details
+        </ThemedText>
+        <ThemedPressable
+          style={styles.mapLinkContainer}
+          onPress={() => openNavigation(props.item.point)}
+        >
+          <IconSymbol name="location.fill" size={24} color="black" />
+        </ThemedPressable>
       </View>
-    </ThemedView>
+    </ThemedPressable>
   );
 }
 
