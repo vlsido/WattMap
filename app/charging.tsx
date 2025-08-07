@@ -17,7 +17,6 @@ import SwipeAction from "@/components/ui/SwipeAction";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
 } from "react-native-reanimated";
 import { LightningIcon } from "@/components/ui/svgs/LightningIcon";
 import { Connector, Session } from "@/types/common";
@@ -129,7 +128,7 @@ export default function Charging() {
 
   const handleDisconnect = useCallback(() => {
     stopCharging(sessionId);
-    router.navigate("/");
+    router.dismissTo("/");
   }, [sessionId]);
 
   return (
@@ -221,7 +220,7 @@ export default function Charging() {
           text="Swipe & Disconnect"
           backgroundColor={"#E7751E"}
           thumbColor="white"
-          paddingHorizontal={20}
+          containerStyle={styles.swipeContainer}
           onSwipeEnd={handleDisconnect}
         />
       </LinearGradient>
@@ -314,6 +313,12 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
+  },
+  swipeContainer: {
+    position: "absolute",
+    left: 20,
+    right: 20,
+    bottom: 20,
   },
   smallLightText: {
     fontSize: 14,
