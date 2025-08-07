@@ -88,7 +88,9 @@ export default function LocationDetails() {
             </Link>
           </View>
         </View>
-        <ScrollView contentContainerStyle={[styles.gap, { padding: 10 }]}>
+        <ScrollView
+          contentContainerStyle={[styles.gap, styles.scrollContainer]}
+        >
           <View style={styles.header}>
             <ThemedText type="defaultBold" style={[styles.centerText]}>
               {locationObject.address}
@@ -109,15 +111,17 @@ export default function LocationDetails() {
 
           <View style={{ height: reservedHeight }} />
         </ScrollView>
-        <SwipeAction
-          text="Swipe & Connect"
-          backgroundColor={Colors.dark.primaryGreen}
-          thumbColor="white"
-          disabled={selectedData === null}
-          containerStyle={styles.swipeContainer}
-          onLayout={onSwipeLayout}
-          onSwipeEnd={handleConnect}
-        />
+        <View style={styles.swipeContainer}>
+          <SwipeAction
+            text="Swipe & Connect"
+            backgroundColor={Colors.dark.primaryGreen}
+            thumbColor="white"
+            disabled={selectedData === null}
+            containerStyle={styles.swipe}
+            onLayout={onSwipeLayout}
+            onSwipeEnd={handleConnect}
+          />
+        </View>
       </ThemedView>
     </SafeAreaView>
   );
@@ -147,7 +151,18 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems: "center",
   },
+  scrollContainer: {
+    padding: 10,
+    width: "100%",
+    maxWidth: 600,
+    alignSelf: "center",
+  },
   swipeContainer: {
+    width: "100%",
+    maxWidth: 400,
+    alignSelf: "center",
+  },
+  swipe: {
     position: "absolute",
     left: 20,
     right: 20,

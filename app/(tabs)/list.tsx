@@ -71,9 +71,12 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   searchBarContainer: {
+    width: "100%",
+    maxWidth: 400,
     borderRadius: 60,
     flexDirection: "row",
     alignItems: "center",
+    alignSelf: "center",
     paddingVertical: 5,
     paddingHorizontal: 10,
     marginHorizontal: 10,
@@ -85,6 +88,9 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flexGrow: 1,
+    width: "100%",
+    maxWidth: 600,
+    alignSelf: "center",
     backgroundColor: "#639377",
     borderRadius: 30,
     padding: 8,

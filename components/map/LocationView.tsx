@@ -140,6 +140,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   cardContainer: {
+    maxWidth: 400,
+    width: "100%",
+    alignSelf: "center",
     borderRadius: 30,
     overflow: "hidden",
     bottom: 0,
