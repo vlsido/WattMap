@@ -10,12 +10,15 @@ import {
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
+  ReduceMotion,
   useAnimatedStyle,
   useSharedValue,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
 import { IconSymbol } from "./IconSymbol";
 import { runOnJS } from "react-native-worklets";
+import { AnimatedPressable } from "@/constants/AnimatedComponents";
 
 interface SwipeActionProps {
   text: string;
@@ -34,9 +37,21 @@ function SwipeAction(props: SwipeActionProps) {
   const { thumbSize = DEFAULT_THUMB_SIZE } = props;
 
   const offsetX = useSharedValue<number>(0);
-  const rotate = useSharedValue<number>(0);
   const containerWidth = useSharedValue<number>(0);
   const opacity = useSharedValue<number>(1);
+
+  const showActivity = useCallback(() => {
+    "worklet";
+
+    offsetX.value = withSpring(thumbSize * 1.5, { duration: 50 }, () => {
+      offsetX.value = withSpring(0, {
+        duration: 500,
+        dampingRatio: 0.2,
+        energyThreshold: 6e-9,
+        reduceMotion: ReduceMotion.Never,
+      });
+    });
+  }, []);
 
   const swipePanGesture = useMemo(
     () =>
@@ -70,17 +85,28 @@ function SwipeAction(props: SwipeActionProps) {
         })
         .onEnd(() => {
           const limit = containerWidth.value - thumbSize - 4;
-          if (offsetX.value >= limit) {
-            opacity.value = 0;
-            offsetX.value = withTiming(limit / 2, { duration: 500 }, () => {
-              runOnJS(props.onSwipeEnd)();
+          if (offsetX.value >= limit - thumbSize) {
+            offsetX.value = withTiming(limit, { duration: 100 }, () => {
+              opacity.value = 0;
+              offsetX.value = withTiming(limit / 2, { duration: 500 }, () => {
+                runOnJS(props.onSwipeEnd)();
+              });
             });
           } else {
-            offsetX.value = withTiming(0, { duration: 250 });
+            offsetX.value = withSpring(0, {
+              duration: 500,
+              dampingRatio: 0.2,
+              energyThreshold: 6e-9,
+              reduceMotion: ReduceMotion.Never,
+            });
           }
         }),
     [props.onSwipeEnd],
   );
+
+  const tapGesture = useMemo(() => Gesture.Tap().onEnd(showActivity), []);
+
+  const composedGesture = Gesture.Exclusive(swipePanGesture, tapGesture);
 
   const containerAnimatedStyle = useAnimatedStyle<ViewStyle>(() => {
     return {
@@ -97,10 +123,7 @@ function SwipeAction(props: SwipeActionProps) {
 
   const thumbAnimatedStyle = useAnimatedStyle<ViewStyle>(() => {
     return {
-      transform: [
-        { translateX: offsetX.value },
-        { rotate: `${rotate.value}deg` },
-      ],
+      transform: [{ translateX: offsetX.value }],
       opacity: opacity.value,
     };
   });
@@ -131,7 +154,7 @@ function SwipeAction(props: SwipeActionProps) {
       ]}
       onLayout={onContainerLayout}
     >
-      <Animated.View
+      <AnimatedPressable
         style={[
           containerAnimatedStyle,
           styles.fill,
@@ -140,11 +163,12 @@ function SwipeAction(props: SwipeActionProps) {
             height: thumbSize + 4,
           },
         ]}
+        onPress={showActivity}
       >
         <Animated.Text style={[textAnimatedStyle, styles.text]}>
           {props.text}
         </Animated.Text>
-      </Animated.View>
+      </AnimatedPressable>
 
       <Animated.View
         style={[
@@ -163,20 +187,30 @@ function SwipeAction(props: SwipeActionProps) {
           animating={!props.disabled}
         />
       </Animated.View>
-      <GestureDetector gesture={swipePanGesture}>
-        <Animated.View
+      <GestureDetector gesture={composedGesture}>
+        <View
           style={[
-            thumbAnimatedStyle,
             styles.thumb,
             {
-              backgroundColor: props.thumbColor,
-              width: thumbSize,
+              width: thumbSize * 2,
               height: thumbSize,
             },
           ]}
         >
-          <IconSymbol name="chevron.right" size={32} color="black" />
-        </Animated.View>
+          <Animated.View
+            style={[
+              thumbAnimatedStyle,
+              styles.thumb,
+              {
+                backgroundColor: props.thumbColor,
+                width: thumbSize,
+                height: thumbSize,
+              },
+            ]}
+          >
+            <IconSymbol name="chevron.right" size={32} color="black" />
+          </Animated.View>
+        </View>
       </GestureDetector>
     </View>
   );
