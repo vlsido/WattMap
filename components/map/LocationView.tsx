@@ -1,30 +1,17 @@
-import { Linking, Platform, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
 import { ThemedText } from "../ThemedText";
 import { ThemedView } from "../ThemedView";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import ConnectorIcon from "../connector/ConnectorIcon";
-import { LatLng } from "react-native-maps";
 import { ThemedTextButton } from "../ThemedTextButton";
 import { Colors } from "@/constants/Colors";
 import { useRouter } from "expo-router";
 import { ConnectorType, Location } from "@/types/common";
+import { openNavigation } from "@/helpers/helperFunctions";
 
 interface LocationViewProps {
   location: Location | null;
-}
-
-function openNavigation(latLng: LatLng) {
-  const destination = `${latLng.latitude},${latLng.longitude}`;
-
-  const url =
-    Platform.OS === "ios"
-      ? `http://maps.apple.com/?daddr=${destination}`
-      : `https://www.google.com/maps/dir/?api=1&destination=${destination}`;
-
-  Linking.openURL(url).catch((err) =>
-    console.error("Failed to open map:", err),
-  );
 }
 
 function LocationView(props: LocationViewProps) {
