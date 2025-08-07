@@ -1,4 +1,5 @@
 import LocationListItem from "@/components/list/LocationListItem";
+import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
@@ -52,13 +53,18 @@ export default function List() {
           />
         </ThemedView>
         {locations.isLoading && <ActivityIndicator size={32} color={"white"} />}
-
-        <FlatList
-          data={filteredLocations}
-          contentContainerStyle={styles.listContainer}
-          keyExtractor={(item) => item.name}
-          renderItem={({ item }) => <LocationListItem item={item} />}
-        />
+        {filteredLocations.length > 0 ? (
+          <FlatList
+            data={filteredLocations}
+            contentContainerStyle={styles.listContainer}
+            keyExtractor={(item) => item.name}
+            renderItem={({ item }) => <LocationListItem item={item} />}
+          />
+        ) : (
+          <ThemedText type="defaultSemiBold" style={{ textAlign: "center" }}>
+            No locations found!
+          </ThemedText>
+        )}
       </ThemedView>
     </SafeAreaView>
   );
@@ -87,7 +93,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   listContainer: {
-    flexGrow: 1,
     width: "100%",
     maxWidth: 600,
     alignSelf: "center",
