@@ -75,7 +75,6 @@ export default function Charging() {
     );
 
     return () => {
-      console.log("undermount");
       backHandler.remove();
     };
   }, []);
@@ -140,10 +139,12 @@ export default function Charging() {
         style={styles.container}
         colors={[themeColors.alternateGreen, "#161719"]}
       >
-        <Image
-          style={styles.carImage}
-          source={require("../assets/images/ev-car.png")}
-        />
+        <View style={styles.carImageContainer}>
+          <Image
+            style={styles.carImage}
+            source={require("../assets/images/ev-car.png")}
+          />
+        </View>
         <View style={styles.header}>
           <ThemedText
             lightColor={themeColors.text}
@@ -250,12 +251,17 @@ const styles = StyleSheet.create({
   gap: {
     gap: 10,
   },
-  carImage: {
+  carImageContainer: {
     position: "absolute",
-    left: "-5%",
-    top: "15%",
+    top: 0,
+    left: 0,
     bottom: 0,
     right: 0,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  carImage: {
+    bottom: "10%",
   },
   header: {
     paddingVertical: 10,
@@ -306,6 +312,7 @@ const styles = StyleSheet.create({
   information: {
     gap: 10,
     width: "100%",
+    maxWidth: 600,
     justifyContent: "center",
   },
   row: {
@@ -335,6 +342,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
+    maxWidth: 400,
   },
   swipe: {
     width: "100%",
