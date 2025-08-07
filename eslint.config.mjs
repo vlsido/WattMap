@@ -32,6 +32,7 @@ export default [
       "no-unreachable-loop": ["warn"],
       "no-invalid-regexp": ["error"],
       "react/react-in-jsx-scope": "off",
+      "@typescript-eslint/no-require-imports": "off",
     },
   },
   {
