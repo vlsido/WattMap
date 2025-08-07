@@ -10,14 +10,13 @@ import {
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
-  ReduceMotion,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
+  runOnJS,
 } from "react-native-reanimated";
 import { IconSymbol } from "./IconSymbol";
-import { runOnJS } from "react-native-worklets";
 import { AnimatedPressable } from "@/constants/AnimatedComponents";
 
 interface SwipeActionProps {
@@ -38,7 +37,7 @@ function SwipeAction(props: SwipeActionProps) {
 
   const offsetX = useSharedValue<number>(0);
   const opacity = useSharedValue<number>(1);
-  const containerWidth = useSharedValue<number>(0);
+  const limitWidth = useSharedValue<number>(0);
 
   const timeoutId = useRef<number | undefined>(undefined);
 
@@ -50,13 +49,10 @@ function SwipeAction(props: SwipeActionProps) {
 
   const showActivity = useCallback(() => {
     "worklet";
-
-    offsetX.value = withSpring(thumbSize * 1.5, { duration: 50 }, () => {
+    offsetX.value = withSpring(thumbSize * 1.5, { duration: 250 }, () => {
       offsetX.value = withSpring(0, {
-        duration: 500,
-        dampingRatio: 0.2,
-        energyThreshold: 6e-9,
-        reduceMotion: ReduceMotion.Never,
+        damping: 15,
+        stiffness: 500,
       });
     });
   }, []);
@@ -78,10 +74,8 @@ function SwipeAction(props: SwipeActionProps) {
             return;
           }
 
-          const limit = containerWidth.value - thumbSize - 4;
-
-          if (offsetX.value > limit) {
-            offsetX.value = limit;
+          if (offsetX.value > limitWidth.value) {
+            offsetX.value = limitWidth.value;
             return;
           }
 
@@ -92,28 +86,33 @@ function SwipeAction(props: SwipeActionProps) {
             return;
           }
 
-          if (next <= limit) {
+          if (next <= limitWidth.value) {
             offsetX.value += event.changeX;
             return;
           }
 
-          offsetX.value = limit;
+          offsetX.value = limitWidth.value;
         })
         .onEnd(() => {
-          const limit = containerWidth.value - thumbSize - 4;
-          if (offsetX.value >= limit - thumbSize) {
-            offsetX.value = withTiming(limit, { duration: 100 }, () => {
-              opacity.value = 0;
-              offsetX.value = withTiming(limit / 2, { duration: 500 }, () => {
-                runOnJS(handleSwipeEnd)();
-              });
-            });
+          if (offsetX.value >= limitWidth.value - thumbSize) {
+            offsetX.value = withTiming(
+              limitWidth.value,
+              { duration: 100 },
+              () => {
+                opacity.value = 0;
+                offsetX.value = withTiming(
+                  limitWidth.value / 2,
+                  { duration: 500 },
+                  () => {
+                    runOnJS(handleSwipeEnd)();
+                  },
+                );
+              },
+            );
           } else {
             offsetX.value = withSpring(0, {
-              duration: 500,
-              dampingRatio: 0.2,
-              energyThreshold: 6e-9,
-              reduceMotion: ReduceMotion.Never,
+              damping: 15,
+              stiffness: 500,
             });
           }
         }),
@@ -151,7 +150,7 @@ function SwipeAction(props: SwipeActionProps) {
   }, []);
 
   const onContainerLayout = useCallback((event: LayoutChangeEvent) => {
-    containerWidth.value = event.nativeEvent.layout.width;
+    limitWidth.value = event.nativeEvent.layout.width - thumbSize - 4;
     if (props.onLayout) {
       props.onLayout(event);
     }
