@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { IconSymbol } from "../ui/IconSymbol";
 import { ThemedPressable } from "../ThemedPressable";
 import { Connector, ConnectorStatus, ConnectorType } from "@/types/common";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 interface ConnectorProps {
   id: number;
@@ -13,10 +14,13 @@ interface ConnectorProps {
   status: ConnectorStatus;
   priceInCentsPerKWh: number;
   maxPowerOutputKW: number;
+  isSelected: boolean;
   onSelect: (connector: Connector) => void;
 }
 
 function ConnectorView(props: ConnectorProps) {
+  const borderColor = useThemeColor({}, "border");
+
   let statusColor = "#1EE78D";
 
   if (props.status === "IN USE") {
@@ -42,7 +46,9 @@ function ConnectorView(props: ConnectorProps) {
         styles.connector,
         styles.gap,
         props.status !== "AVAILABLE" && { opacity: 0.75 },
+        props.isSelected && { borderWidth: 0.5, borderColor },
       ]}
+      disabled={props.status !== "AVAILABLE"}
       onPress={() =>
         props.onSelect({
           id: props.id,
@@ -53,7 +59,7 @@ function ConnectorView(props: ConnectorProps) {
         })
       }
     >
-      <View>
+      <View style={[styles.row, { justifyContent: "space-between" }]}>
         <View style={[styles.row, styles.gap]}>
           <View
             style={{
@@ -80,6 +86,12 @@ function ConnectorView(props: ConnectorProps) {
             />
           </View>
           <ThemedText type="small">{props.status}</ThemedText>
+        </View>
+        <View
+          style={[styles.row, styles.gap, !props.isSelected && { opacity: 0 }]}
+        >
+          <IconSymbol name="checkmark" size={24} color={"white"} />
+          <ThemedText type="small">SELECTED</ThemedText>
         </View>
       </View>
       <View style={[styles.row, styles.gap]}>

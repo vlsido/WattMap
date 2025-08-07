@@ -6,12 +6,21 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import { Colors } from "@/constants/Colors";
 import { Connector, Location } from "@/types/common";
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  LayoutChangeEvent,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function LocationDetails() {
   const { location, r } = useLocalSearchParams();
+
+  const insets = useSafeAreaInsets();
+
   const router = useRouter();
 
   const [selectedData, setSelectedData] = useState<{
@@ -19,18 +28,13 @@ export default function LocationDetails() {
     connector: Connector;
   } | null>(null);
 
-  useEffect(() => {
-    console.log(selectedData);
-  }, [selectedData]);
+  const [reservedHeight, setReservedHeight] = useState<number>(36);
 
   const locationObject: Location = useMemo(() => {
     return JSON.parse(location as string);
   }, [location]);
 
-  const insets = useSafeAreaInsets();
-
   function handleConnect() {
-    console.log("selectedData", selectedData);
     if (selectedData === null) return;
 
     router.navigate({
@@ -42,6 +46,10 @@ export default function LocationDetails() {
       },
     });
   }
+
+  const onSwipeLayout = useCallback((event: LayoutChangeEvent) => {
+    setReservedHeight(event.nativeEvent.layout.height + 20);
+  }, []);
 
   return (
     <SafeAreaView
@@ -84,18 +92,23 @@ export default function LocationDetails() {
               key={charger.id}
               id={charger.id}
               connectors={charger.connectors}
+              selectedChargerId={selectedData?.chargerId}
+              selectedConnectorId={selectedData?.connector.id}
               onSelectConnector={(connector: Connector) =>
                 setSelectedData({ chargerId: charger.id, connector: connector })
               }
             />
           ))}
+
+          <View style={{ height: reservedHeight }} />
         </ScrollView>
         <SwipeAction
           text="Swipe and Connect"
           backgroundColor={Colors.dark.primaryGreen}
           thumbColor="white"
-          paddingHorizontal={20}
           disabled={selectedData === null}
+          containerStyle={styles.swipeContainer}
+          onLayout={onSwipeLayout}
           onSwipeEnd={handleConnect}
         />
       </ThemedView>
@@ -123,5 +136,11 @@ const styles = StyleSheet.create({
   header: {
     paddingVertical: 10,
     alignItems: "center",
+  },
+  swipeContainer: {
+    position: "absolute",
+    left: 20,
+    right: 20,
+    bottom: 20,
   },
 });

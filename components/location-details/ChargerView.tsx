@@ -6,6 +6,8 @@ import { Connector } from "@/types/common";
 interface ChargerProps {
   id: string;
   connectors: Connector[];
+  selectedChargerId?: string;
+  selectedConnectorId?: number;
   onSelectConnector: (connector: Connector) => void;
 }
 
@@ -30,6 +32,10 @@ function ChargerView(props: ChargerProps) {
             status={connector.status}
             priceInCentsPerKWh={connector.priceInCentsPerKWh}
             maxPowerOutputKW={connector.maxPowerOutputKW}
+            isSelected={
+              props.selectedChargerId === props.id &&
+              props.selectedConnectorId === connector.id
+            }
             onSelect={props.onSelectConnector}
           />
         ))}
