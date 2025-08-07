@@ -16,6 +16,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { ThemedPressable } from "@/components/ThemedPressable";
 
 export default function LocationDetails() {
   const { location, r } = useLocalSearchParams();
@@ -63,28 +64,38 @@ export default function LocationDetails() {
     >
       <ThemedView style={styles.container}>
         <View style={styles.screenActionsContainer}>
-          <ThemedView style={[styles.row, styles.gap]}>
-            <IconSymbol
-              name={r === "LIST" ? "list.bullet" : "map.fill"}
-              size={28}
-              color={themeColors.primaryGreen}
-            />
-            <Link href={r === "LIST" ? "/list" : "/"}>
+          <Link
+            href={r === "LIST" ? "/list" : "/"}
+            style={[styles.row, styles.gap]}
+            asChild
+          >
+            <ThemedPressable>
+              <IconSymbol
+                name={r === "LIST" ? "list.bullet" : "map.fill"}
+                size={28}
+                color={themeColors.primaryGreen}
+              />
               <ThemedText type="defaultSemiBold">
                 {r === "LIST" ? "Back to List" : "Back to Map"}
               </ThemedText>
-            </Link>
-          </ThemedView>
+            </ThemedPressable>
+          </Link>
           <View style={[styles.row, styles.gap]}>
-            <IconSymbol
-              name={r === "LIST" ? "map.fill" : "list.bullet"}
-              size={28}
-              color={themeColors.primaryGreen}
-            />
-            <Link href={r === "LIST" ? "/" : "/list"}>
-              <ThemedText type="defaultSemiBold">
-                {r === "LIST" ? "Open Map" : "Open List"}
-              </ThemedText>
+            <Link
+              href={r === "LIST" ? "/" : "/list"}
+              style={[styles.row, styles.gap]}
+              asChild
+            >
+              <ThemedPressable>
+                <IconSymbol
+                  name={r === "LIST" ? "map.fill" : "list.bullet"}
+                  size={28}
+                  color={themeColors.primaryGreen}
+                />
+                <ThemedText type="defaultSemiBold">
+                  {r === "LIST" ? "Open Map" : "Open List"}
+                </ThemedText>
+              </ThemedPressable>
             </Link>
           </View>
         </View>
