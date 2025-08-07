@@ -57,8 +57,6 @@ export default function Charging() {
     };
   }, []);
 
-  const backAction = useCallback(() => {}, []);
-
   useEffect(() => {
     function backAction() {
       notificationManager.showUserMessage(
@@ -104,7 +102,11 @@ export default function Charging() {
 
   useEffect(() => {
     batteryLevelHeight.value = session.data
-      ? (session.data.socCurrent / 100) * (windowHeight / 3.5)
+      ? (session.data.socCurrent / 100) * (windowHeight / 5)
+      : user.vehicle.initialSoC;
+
+    user.vehicle.initialSoC = session.data
+      ? session.data.socCurrent
       : user.vehicle.initialSoC;
   }, [session.data]);
 
