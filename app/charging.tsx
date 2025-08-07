@@ -23,8 +23,10 @@ import { Connector, Session } from "@/types/common";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getSessionState, startCharging, stopCharging, user } from "@/api/api";
 import { notificationManager } from "@/managers/NotificationManager";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function Charging() {
+  const primaryGreen = useThemeColor({}, "primaryGreen");
   const insets = useSafeAreaInsets();
   const router = useRouter();
 
@@ -84,19 +86,19 @@ export default function Charging() {
 
   const currentEnergyKWh = session.data
     ? user.vehicle.batteryCapacityKWh * (session.data.socCurrent / 100)
-    : 0;
+    : user.vehicle.batteryCapacityKWh * (user.vehicle.initialSoC / 100);
   const distanceKm =
     currentEnergyKWh / (user.vehicle.consumptionKWhPer100Km / 100);
   const energyNeededKWh = session.data
     ? user.vehicle.batteryCapacityKWh * ((100 - session.data.socCurrent) / 100)
-    : 0;
+    : user.vehicle.batteryCapacityKWh * ((100 - user.vehicle.initialSoC) / 100);
   const chargingPowerKW = Math.min(
     connectorObject.maxPowerOutputKW,
     user.vehicle.maxChargeKW,
   );
   const timeRemainingHours = energyNeededKWh / chargingPowerKW;
 
-  const batteryLevelHeight = useSharedValue<number>(0);
+  const batteryLevelHeight = useSharedValue<number>(user.vehicle.initialSoC);
 
   const AnimatedLinearGradient =
     Animated.createAnimatedComponent(LinearGradient);
@@ -104,7 +106,7 @@ export default function Charging() {
   useEffect(() => {
     batteryLevelHeight.value = session.data
       ? (session.data.socCurrent / 100) * (windowHeight / 3.5)
-      : 0;
+      : user.vehicle.initialSoC;
   }, [session.data]);
 
   const batteryLevelAnimatedStyle = useAnimatedStyle<ViewStyle>(() => {
@@ -134,7 +136,10 @@ export default function Charging() {
         { top: insets.top, bottom: insets.bottom },
       ]}
     >
-      <LinearGradient style={styles.container} colors={["#173925", "#161719"]}>
+      <LinearGradient
+        style={styles.container}
+        colors={[primaryGreen, "#161719"]}
+      >
         <Image
           style={styles.carImage}
           source={require("../assets/images/ev-car.png")}
@@ -152,6 +157,7 @@ export default function Charging() {
           <View
             style={[
               styles.batteryBody,
+              styles.shadowMedium,
               { height: windowHeight / 3.5, width: windowHeight / 6 },
             ]}
           >
@@ -174,7 +180,7 @@ export default function Charging() {
         </View>
         <View style={styles.information}>
           <View style={styles.row}>
-            <View style={styles.infoBox}>
+            <View style={[styles.infoBox, styles.shadowMedium]}>
               <Text style={[styles.text, styles.smallLightText]}>
                 Remaining Distance
               </Text>
@@ -182,7 +188,7 @@ export default function Charging() {
                 {distanceKm.toFixed(0)} km
               </Text>
             </View>
-            <View style={styles.infoBox}>
+            <View style={[styles.infoBox, styles.shadowMedium]}>
               <Text style={[styles.text, styles.smallLightText]}>Energy</Text>
               <Text style={[styles.text, styles.defaultPlusText]}>
                 {currentEnergyKWh.toFixed(1)} kwh
@@ -190,13 +196,13 @@ export default function Charging() {
             </View>
           </View>
           <View style={styles.row}>
-            <View style={styles.infoBox}>
+            <View style={[styles.infoBox, styles.shadowMedium]}>
               <Text style={[styles.text, styles.smallLightText]}>Port</Text>
               <Text style={[styles.text, styles.defaultPlusText]}>
                 {connectorObject.connectorType}
               </Text>
             </View>
-            <View style={styles.infoBox}>
+            <View style={[styles.infoBox, styles.shadowMedium]}>
               <Text style={[styles.text, styles.smallLightText]}>
                 Time Remaining
               </Text>
@@ -256,16 +262,24 @@ const styles = StyleSheet.create({
     height: 8,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    borderBottomWidth: 1,
+    borderWidth: 0.5,
     backgroundColor: "#E2E2E2",
   },
   batteryBody: {
     borderRadius: 20,
+    borderWidth: 0.5,
     backgroundColor: "#E3E3E3",
     justifyContent: "flex-end",
     alignItems: "center",
     paddingBottom: 10,
     overflow: "hidden",
+  },
+  shadowMedium: {
+    elevation: 2,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
   },
   batteryLevel: {
     position: "absolute",
