@@ -1,7 +1,7 @@
 import { notificationManager } from "@/managers/NotificationManager";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { NotificationMessage } from "./types";
-import NotificationCard from "./NotificationCard";
+import Notification from "./Notification/Notification";
 
 function NotificationHelper() {
   const [message, setMessage] = useState<NotificationMessage[]>([]);
@@ -37,7 +37,7 @@ function NotificationHelper() {
   return (
     <>
       {message[0] && (
-        <NotificationCard
+        <Notification
           key={message[0].id}
           id={message[0].id}
           text={message[0].text}
