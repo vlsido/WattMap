@@ -23,6 +23,8 @@ const MAPPING = {
   "location.fill": "navigation-variant",
   "banknote.fill": "cash",
   "chevron.right": "chevron-right",
+  checkmark: "check",
+  magnifyingglass: "magnify",
   "ev.charger.fill": "ev-station",
   "ev.plug.ac.type.2.fill": "ev-plug-type2",
   "ev.plug.dc.chademo.fill": "ev-plug-chademo",
