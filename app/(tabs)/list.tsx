@@ -1,11 +1,16 @@
 import LocationListItem from "@/components/list/LocationListItem";
+import { ThemedView } from "@/components/ThemedView";
+import { IconSymbol } from "@/components/ui/IconSymbol";
 import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
 import { useLocations } from "@/hooks/useLocations";
+import { useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
   SafeAreaView,
   StyleSheet,
+  TextInput,
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -14,25 +19,67 @@ export default function List() {
 
   const insets = useSafeAreaInsets();
   const bottom = useBottomTabOverflow();
+  const [search, setSearch] = useState<string>("");
+
+  const filteredLocations = useMemo(() => {
+    if (!locations.data) return [];
+    if (!search.trim()) return locations.data;
+    return locations.data.filter((loc) =>
+      loc.name.toLowerCase().includes(search.trim().toLowerCase()),
+    );
+  }, [locations.data, search]);
 
   return (
-    <SafeAreaView style={[styles.container, { top: insets.top, bottom }]}>
-      {locations.isLoading && <ActivityIndicator size={32} color={"white"} />}
-      <FlatList
-        data={locations.data}
-        contentContainerStyle={styles.listContainer}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => <LocationListItem item={item} />}
-      />
+    <SafeAreaView
+      style={[StyleSheet.absoluteFill, { top: insets.top, bottom }]}
+    >
+      <ThemedView style={styles.container}>
+        <View style={styles.searchBarContainer}>
+          <IconSymbol name="magnifyingglass" size={28} color="black" />
+          <TextInput
+            style={styles.searchBar}
+            placeholder="Search locations..."
+            placeholderTextColor="#aaa"
+            value={search}
+            onChangeText={setSearch}
+            autoCorrect={false}
+            autoCapitalize="none"
+          />
+        </View>
+        {locations.isLoading && <ActivityIndicator size={32} color={"white"} />}
+
+        <FlatList
+          data={filteredLocations}
+          contentContainerStyle={styles.listContainer}
+          keyExtractor={(item) => item.name}
+          renderItem={({ item }) => <LocationListItem item={item} />}
+        />
+      </ThemedView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 10,
+    gap: 10,
+  },
+  searchBarContainer: {
+    borderRadius: 20,
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    marginHorizontal: 10,
+  },
+  searchBar: {
+    flex: 1,
+    color: "black",
+    fontSize: 16,
   },
   listContainer: {
+    flexGrow: 1,
     backgroundColor: "#639377",
     borderRadius: 30,
     padding: 8,
