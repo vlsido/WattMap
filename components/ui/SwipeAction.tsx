@@ -2,6 +2,7 @@ import { useCallback, useMemo } from "react";
 import {
   ActivityIndicator,
   LayoutChangeEvent,
+  StyleProp,
   StyleSheet,
   TextStyle,
   View,
@@ -20,14 +21,18 @@ interface SwipeActionProps {
   text: string;
   backgroundColor: string;
   thumbColor: string;
-  paddingHorizontal: number;
+  containerStyle?: StyleProp<ViewStyle>;
   disabled?: boolean;
+  thumbSize?: number;
   onSwipeEnd: () => void;
+  onLayout?: (event: LayoutChangeEvent) => void;
 }
 
-const THUMB_SIZE = 58;
+const DEFAULT_THUMB_SIZE = 58;
 
 function SwipeAction(props: SwipeActionProps) {
+  const { thumbSize = DEFAULT_THUMB_SIZE } = props;
+
   const offsetX = useSharedValue<number>(0);
   const rotate = useSharedValue<number>(0);
   const containerWidth = useSharedValue<number>(0);
@@ -42,36 +47,34 @@ function SwipeAction(props: SwipeActionProps) {
             return;
           }
 
-          if (offsetX.value > containerWidth.value - THUMB_SIZE) {
-            offsetX.value = containerWidth.value - THUMB_SIZE - 4;
+          const limit = containerWidth.value - thumbSize - 4;
+
+          if (offsetX.value > limit) {
+            offsetX.value = limit;
             return;
           }
 
-          if (offsetX.value + event.changeX <= 0) {
+          const next = offsetX.value + event.changeX;
+
+          if (next <= 0) {
             offsetX.value = 0;
             return;
           }
 
-          if (
-            offsetX.value + event.changeX <=
-            containerWidth.value - THUMB_SIZE - 4
-          ) {
+          if (next <= limit) {
             offsetX.value += event.changeX;
             return;
           }
 
-          offsetX.value = containerWidth.value - THUMB_SIZE - 4;
+          offsetX.value = limit;
         })
         .onEnd(() => {
-          if (offsetX.value >= containerWidth.value - THUMB_SIZE - 4) {
+          const limit = containerWidth.value - thumbSize - 4;
+          if (offsetX.value >= limit) {
             opacity.value = 0;
-            offsetX.value = withTiming(
-              (containerWidth.value - THUMB_SIZE - 4) / 2,
-              { duration: 500 },
-              () => {
-                runOnJS(props.onSwipeEnd)();
-              },
-            );
+            offsetX.value = withTiming(limit / 2, { duration: 500 }, () => {
+              runOnJS(props.onSwipeEnd)();
+            });
           } else {
             offsetX.value = withTiming(0, { duration: 250 });
           }
@@ -110,17 +113,20 @@ function SwipeAction(props: SwipeActionProps) {
 
   const onContainerLayout = useCallback((event: LayoutChangeEvent) => {
     containerWidth.value = event.nativeEvent.layout.width;
+    if (props.onLayout) {
+      props.onLayout(event);
+    }
   }, []);
 
   return (
     <View
-      pointerEvents={props.disabled === true ? "none" : "auto"}
+      pointerEvents={props.disabled ? "none" : "auto"}
       style={[
         styles.container,
+        props.containerStyle,
         {
-          opacity: props.disabled === true ? 0.5 : 1,
-          left: props.paddingHorizontal ?? 0,
-          right: props.paddingHorizontal ?? 0,
+          opacity: props.disabled ? 0.5 : 1,
+          height: thumbSize + 4,
         },
       ]}
       onLayout={onContainerLayout}
@@ -129,7 +135,10 @@ function SwipeAction(props: SwipeActionProps) {
         style={[
           containerAnimatedStyle,
           styles.fill,
-          { backgroundColor: props.backgroundColor },
+          {
+            backgroundColor: props.backgroundColor,
+            height: thumbSize + 4,
+          },
         ]}
       >
         <Animated.Text style={[textAnimatedStyle, styles.text]}>
@@ -141,7 +150,11 @@ function SwipeAction(props: SwipeActionProps) {
         style={[
           activityIndicatorAnimatedStyle,
           styles.thumb,
-          { backgroundColor: props.thumbColor },
+          {
+            backgroundColor: props.thumbColor,
+            width: thumbSize,
+            height: thumbSize,
+          },
         ]}
       >
         <ActivityIndicator
@@ -155,7 +168,11 @@ function SwipeAction(props: SwipeActionProps) {
           style={[
             thumbAnimatedStyle,
             styles.thumb,
-            { backgroundColor: props.thumbColor },
+            {
+              backgroundColor: props.thumbColor,
+              width: thumbSize,
+              height: thumbSize,
+            },
           ]}
         >
           <IconSymbol name="chevron.right" size={32} color="black" />
@@ -169,10 +186,7 @@ export default SwipeAction;
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    bottom: 0,
     borderRadius: 60,
-    height: THUMB_SIZE + 4,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
@@ -184,7 +198,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     borderRadius: 60,
-    height: THUMB_SIZE + 4,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
@@ -200,8 +213,6 @@ const styles = StyleSheet.create({
   thumb: {
     position: "absolute",
     left: 0,
-    width: THUMB_SIZE,
-    height: THUMB_SIZE,
     marginHorizontal: 2,
     borderRadius: 60,
     justifyContent: "center",
