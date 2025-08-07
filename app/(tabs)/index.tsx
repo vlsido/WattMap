@@ -3,12 +3,19 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Region } from "react-native-maps";
 import LocationView from "@/components/map/LocationView";
 import { useState } from "react";
 import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
 import { useLocations } from "@/hooks/useLocations";
 import { Location } from "@/types/common";
+
+const INITIAL_REGION: Region = {
+  latitude: 59.441466,
+  longitude: 24.751405,
+  latitudeDelta: 0.0922,
+  longitudeDelta: 0.0421,
+};
 
 export default function Index() {
   const locations = useLocations();
@@ -26,13 +33,9 @@ export default function Index() {
     >
       <MapView
         style={[StyleSheet.absoluteFill]}
-        initialRegion={{
-          latitude: 59.441466,
-          longitude: 24.751405,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
+        region={INITIAL_REGION}
         toolbarEnabled={false}
+        onPress={() => setSelectedLocation(null)}
       >
         {locations.isSuccess &&
           locations.data.map((location, index) => (

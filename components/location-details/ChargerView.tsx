@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { ThemedText } from "../ThemedText";
 import ConnectorView from "./ConnectorView";
 import { Connector } from "@/types/common";
@@ -14,9 +14,9 @@ interface ChargerProps {
 function ChargerView(props: ChargerProps) {
   return (
     <View style={[styles.gap, styles.charger]}>
-      <View style={[styles.row, { justifyContent: "space-between" }]}>
-        <ThemedText>Charger ID:</ThemedText>
-        <ThemedText>{props.id}</ThemedText>
+      <View style={[styles.textContainer]}>
+        <Text style={styles.defaultSemiBold}>Charger ID</Text>
+        <Text style={styles.defaultSemiBold}>{props.id}</Text>
       </View>
       {props.connectors
         .sort((a, b) => {
@@ -46,15 +46,22 @@ function ChargerView(props: ChargerProps) {
 export default ChargerView;
 
 const styles = StyleSheet.create({
-  row: {
+  textContainer: {
+    paddingHorizontal: 10,
+    justifyContent: "space-between",
     flexDirection: "row",
     alignItems: "center",
+  },
+  defaultSemiBold: {
+    fontSize: 16,
+    fontWeight: 600,
+    color: "white",
   },
   gap: {
     gap: 10,
   },
   charger: {
-    backgroundColor: "#63937790",
+    backgroundColor: "#639377",
     paddingVertical: 20,
     paddingHorizontal: 10,
     borderRadius: 30,

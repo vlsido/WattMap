@@ -44,7 +44,7 @@ function LocationListItem(props: LocationListItemProps) {
 
   return (
     <ThemedPressable
-      style={styles.container}
+      style={[styles.container, styles.shadowMedium]}
       onPress={() =>
         router.navigate({
           pathname: "/location-details",
@@ -90,17 +90,14 @@ function LocationListItem(props: LocationListItemProps) {
       <View
         style={[
           styles.row,
-          { justifyContent: "space-between", alignItems: "center" },
+          { justifyContent: "flex-end", alignItems: "center" },
         ]}
       >
-        <ThemedText
-          style={{ opacity: 0.5, alignSelf: "center" }}
-          type="smallSemiBold"
-        >
-          press to open details
-        </ThemedText>
         <ThemedPressable
           style={styles.mapLinkContainer}
+          darkColor={Colors.dark.search}
+          lightColor={Colors.light.search}
+          type="background"
           onPress={() => openNavigation(props.item.point)}
         >
           <IconSymbol name="location.fill" size={24} color="black" />
@@ -137,11 +134,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   mapLinkContainer: {
-    backgroundColor: Colors.dark.primaryGreen,
     borderRadius: 60,
     padding: 5,
   },
   linkText: {
     fontSize: 16,
+  },
+  shadowMedium: {
+    elevation: 2,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
   },
 });

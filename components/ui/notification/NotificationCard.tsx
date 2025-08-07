@@ -5,14 +5,13 @@ import Animated, {
   FadeOutRight,
 } from "react-native-reanimated";
 import { NotificationMessage } from "./types";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useCallback, useState } from "react";
+import { AnimatedPressable } from "@/constants/AnimatedComponents";
 
 export interface NotificationCardProps extends NotificationMessage {
   onClose: (id: string) => void;
 }
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 function NotificationCard(props: NotificationCardProps) {
   const [isTriggered, setIsTriggered] = useState<boolean>(false);

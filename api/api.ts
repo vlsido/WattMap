@@ -7,6 +7,7 @@ import { Location, Session } from "@/types/common";
 export const serverIp = "192.168.0.101";
 
 export const user = {
+  id: 1,
   firstName: "Vladislav",
   lastName: "Sidorenko",
   vehicle: {

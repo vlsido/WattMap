@@ -2,6 +2,7 @@ import LocationListItem from "@/components/list/LocationListItem";
 import { ThemedView } from "@/components/ThemedView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
+import { Colors } from "@/constants/Colors";
 import { useLocations } from "@/hooks/useLocations";
 import { useMemo, useState } from "react";
 import {
@@ -34,7 +35,11 @@ export default function List() {
       style={[StyleSheet.absoluteFill, { top: insets.top, bottom }]}
     >
       <ThemedView style={styles.container}>
-        <View style={styles.searchBarContainer}>
+        <ThemedView
+          style={styles.searchBarContainer}
+          lightColor={Colors.light.search}
+          darkColor={Colors.dark.search}
+        >
           <IconSymbol name="magnifyingglass" size={28} color="black" />
           <TextInput
             style={styles.searchBar}
@@ -45,7 +50,7 @@ export default function List() {
             autoCorrect={false}
             autoCapitalize="none"
           />
-        </View>
+        </ThemedView>
         {locations.isLoading && <ActivityIndicator size={32} color={"white"} />}
 
         <FlatList
@@ -66,10 +71,10 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   searchBarContainer: {
-    borderRadius: 20,
-    backgroundColor: "#fff",
+    borderRadius: 60,
     flexDirection: "row",
     alignItems: "center",
+    paddingVertical: 5,
     paddingHorizontal: 10,
     marginHorizontal: 10,
   },

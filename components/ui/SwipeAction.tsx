@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   ActivityIndicator,
   LayoutChangeEvent,
@@ -37,8 +37,16 @@ function SwipeAction(props: SwipeActionProps) {
   const { thumbSize = DEFAULT_THUMB_SIZE } = props;
 
   const offsetX = useSharedValue<number>(0);
-  const containerWidth = useSharedValue<number>(0);
   const opacity = useSharedValue<number>(1);
+  const containerWidth = useSharedValue<number>(0);
+
+  const timeoutId = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timeoutId.current);
+    };
+  }, []);
 
   const showActivity = useCallback(() => {
     "worklet";
@@ -52,6 +60,14 @@ function SwipeAction(props: SwipeActionProps) {
       });
     });
   }, []);
+
+  const handleSwipeEnd = useCallback(() => {
+    props.onSwipeEnd();
+    timeoutId.current = setTimeout(() => {
+      offsetX.value = 0;
+      opacity.value = 1;
+    }, 1000);
+  }, [props.onSwipeEnd]);
 
   const swipePanGesture = useMemo(
     () =>
@@ -89,7 +105,7 @@ function SwipeAction(props: SwipeActionProps) {
             offsetX.value = withTiming(limit, { duration: 100 }, () => {
               opacity.value = 0;
               offsetX.value = withTiming(limit / 2, { duration: 500 }, () => {
-                runOnJS(props.onSwipeEnd)();
+                runOnJS(handleSwipeEnd)();
               });
             });
           } else {
@@ -101,7 +117,7 @@ function SwipeAction(props: SwipeActionProps) {
             });
           }
         }),
-    [props.onSwipeEnd],
+    [handleSwipeEnd],
   );
 
   const tapGesture = useMemo(() => Gesture.Tap().onEnd(showActivity), []);
@@ -169,24 +185,26 @@ function SwipeAction(props: SwipeActionProps) {
           {props.text}
         </Animated.Text>
       </AnimatedPressable>
-
-      <Animated.View
-        style={[
-          activityIndicatorAnimatedStyle,
-          styles.thumb,
-          {
-            backgroundColor: props.thumbColor,
-            width: thumbSize,
-            height: thumbSize,
-          },
-        ]}
-      >
-        <ActivityIndicator
-          size={32}
-          color="black"
-          animating={!props.disabled}
-        />
-      </Animated.View>
+      <View style={[styles.thumb]}>
+        <Animated.View
+          style={[
+            activityIndicatorAnimatedStyle,
+            styles.thumb,
+            {
+              backgroundColor: "white",
+              borderWidth: 0.5,
+              width: thumbSize,
+              height: thumbSize,
+            },
+          ]}
+        >
+          <ActivityIndicator
+            size={32}
+            color="black"
+            animating={!props.disabled}
+          />
+        </Animated.View>
+      </View>
       <GestureDetector gesture={composedGesture}>
         <View
           style={[
@@ -201,6 +219,7 @@ function SwipeAction(props: SwipeActionProps) {
             style={[
               thumbAnimatedStyle,
               styles.thumb,
+              !props.disabled && styles.shadowMedium,
               {
                 backgroundColor: props.thumbColor,
                 width: thumbSize,
@@ -243,13 +262,21 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     textAlign: "center",
+    fontWeight: "600",
   },
   thumb: {
     position: "absolute",
     left: 0,
-    marginHorizontal: 2,
+    marginHorizontal: 1,
     borderRadius: 60,
     justifyContent: "center",
     alignItems: "center",
+  },
+  shadowMedium: {
+    elevation: 2,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
   },
 });

@@ -15,9 +15,12 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useThemeColors } from "@/hooks/useThemeColors";
 
 export default function LocationDetails() {
   const { location, r } = useLocalSearchParams();
+
+  const themeColors = useThemeColors();
 
   const insets = useSafeAreaInsets();
 
@@ -64,10 +67,10 @@ export default function LocationDetails() {
             <IconSymbol
               name={r === "LIST" ? "list.bullet" : "map.fill"}
               size={28}
-              color={Colors.dark.primaryGreen}
+              color={themeColors.primaryGreen}
             />
             <Link href={r === "LIST" ? "/list" : "/"}>
-              <ThemedText>
+              <ThemedText type="defaultSemiBold">
                 {r === "LIST" ? "Back to List" : "Back to Map"}
               </ThemedText>
             </Link>
@@ -76,17 +79,19 @@ export default function LocationDetails() {
             <IconSymbol
               name={r === "LIST" ? "map.fill" : "list.bullet"}
               size={28}
-              color={Colors.dark.primaryGreen}
+              color={themeColors.primaryGreen}
             />
             <Link href={r === "LIST" ? "/" : "/list"}>
-              <ThemedText>{r === "LIST" ? "Open Map" : "Open List"}</ThemedText>
+              <ThemedText type="defaultSemiBold">
+                {r === "LIST" ? "Open Map" : "Open List"}
+              </ThemedText>
             </Link>
           </View>
         </View>
         <ScrollView contentContainerStyle={[styles.gap, { padding: 10 }]}>
           <View style={styles.header}>
-            <ThemedText type="defaultSemiBold">
-              {locationObject.name}
+            <ThemedText type="defaultBold" style={[styles.centerText]}>
+              {locationObject.address}
             </ThemedText>
           </View>
           {locationObject.chargers.map((charger) => (
@@ -105,7 +110,7 @@ export default function LocationDetails() {
           <View style={{ height: reservedHeight }} />
         </ScrollView>
         <SwipeAction
-          text="Swipe and Connect"
+          text="Swipe & Connect"
           backgroundColor={Colors.dark.primaryGreen}
           thumbColor="white"
           disabled={selectedData === null}
@@ -121,6 +126,9 @@ export default function LocationDetails() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  centerText: {
+    textAlign: "center",
   },
   screenActionsContainer: {
     flexDirection: "row",

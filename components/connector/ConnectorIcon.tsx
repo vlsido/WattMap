@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/useThemeColors";
 import { ConnectorStatus, ConnectorType } from "@/types/common";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
@@ -8,12 +9,14 @@ interface ConnectorIconProps {
 }
 
 function ConnectorIcon(props: ConnectorIconProps) {
-  let color = "#1EE78D";
+  const themeColors = useThemeColors();
+
+  let color = themeColors.primaryGreen;
 
   if (props.status === "IN USE") {
-    color = "#B0A7FF";
+    color = themeColors.inUse;
   } else if (props.status === "UNAVAILABLE") {
-    color = "#ED060C";
+    color = themeColors.primaryRed;
   }
 
   switch (props.type) {

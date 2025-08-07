@@ -14,19 +14,17 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import SwipeAction from "@/components/ui/SwipeAction";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-} from "react-native-reanimated";
+import { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { LightningIcon } from "@/components/ui/svgs/LightningIcon";
 import { Connector, Session } from "@/types/common";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getSessionState, startCharging, stopCharging, user } from "@/api/api";
 import { notificationManager } from "@/managers/NotificationManager";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { AnimatedLinearGradient } from "@/constants/AnimatedComponents";
+import { useThemeColors } from "@/hooks/useThemeColors";
 
 export default function Charging() {
-  const primaryGreen = useThemeColor({}, "primaryGreen");
+  const themeColors = useThemeColors();
   const insets = useSafeAreaInsets();
   const router = useRouter();
 
@@ -59,6 +57,8 @@ export default function Charging() {
     };
   }, []);
 
+  const backAction = useCallback(() => {}, []);
+
   useEffect(() => {
     function backAction() {
       notificationManager.showUserMessage(
@@ -74,7 +74,10 @@ export default function Charging() {
       backAction,
     );
 
-    return () => backHandler.remove();
+    return () => {
+      console.log("undermount");
+      backHandler.remove();
+    };
   }, []);
 
   const session = useQuery<Session>({
@@ -100,9 +103,6 @@ export default function Charging() {
 
   const batteryLevelHeight = useSharedValue<number>(user.vehicle.initialSoC);
 
-  const AnimatedLinearGradient =
-    Animated.createAnimatedComponent(LinearGradient);
-
   useEffect(() => {
     batteryLevelHeight.value = session.data
       ? (session.data.socCurrent / 100) * (windowHeight / 3.5)
@@ -126,7 +126,7 @@ export default function Charging() {
 
   const handleDisconnect = useCallback(() => {
     stopCharging(sessionId);
-    router.dismissTo("/");
+    router.dismiss();
   }, [sessionId]);
 
   return (
@@ -138,17 +138,25 @@ export default function Charging() {
     >
       <LinearGradient
         style={styles.container}
-        colors={[primaryGreen, "#161719"]}
+        colors={[themeColors.alternateGreen, "#161719"]}
       >
         <Image
           style={styles.carImage}
           source={require("../assets/images/ev-car.png")}
         />
         <View style={styles.header}>
-          <ThemedText type="defaultSemiBold" style={styles.centerText}>
+          <ThemedText
+            lightColor={themeColors.text}
+            type="defaultSemiBold"
+            style={styles.centerText}
+          >
             {locationName}
           </ThemedText>
-          <ThemedText type="default" style={styles.centerText}>
+          <ThemedText
+            lightColor={themeColors.text}
+            type="default"
+            style={styles.centerText}
+          >
             {chargerId}
           </ThemedText>
         </View>
@@ -158,7 +166,7 @@ export default function Charging() {
             style={[
               styles.batteryBody,
               styles.shadowMedium,
-              { height: windowHeight / 3.5, width: windowHeight / 6 },
+              { height: windowHeight / 5, width: windowHeight / 8 },
             ]}
           >
             <AnimatedLinearGradient
@@ -166,7 +174,7 @@ export default function Charging() {
               colors={["#1EE78D", "#85ED06"]}
             />
             <View style={styles.lightningIconContainer}>
-              <LightningIcon width={72} height={72} />
+              <LightningIcon width={48} height={48} />
             </View>
             <View style={[styles.gap]}>
               <Text style={[styles.largeMediumText, styles.centerText]}>
@@ -218,13 +226,15 @@ export default function Charging() {
             €{session.data ? session.data.price.toFixed(2) : "--"}
           </Text>
         </View>
-        <SwipeAction
-          text="Swipe & Disconnect"
-          backgroundColor={"#E7751E"}
-          thumbColor="white"
-          containerStyle={styles.swipeContainer}
-          onSwipeEnd={handleDisconnect}
-        />
+        <View style={styles.swipeContainer}>
+          <SwipeAction
+            text="Swipe & Disconnect"
+            backgroundColor={"#E7751E"}
+            thumbColor="white"
+            containerStyle={styles.swipe}
+            onSwipeEnd={handleDisconnect}
+          />
+        </View>
       </LinearGradient>
     </SafeAreaView>
   );
@@ -262,12 +272,12 @@ const styles = StyleSheet.create({
     height: 8,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    borderWidth: 0.5,
+    borderBottomWidth: 0.5,
     backgroundColor: "#E2E2E2",
   },
   batteryBody: {
     borderRadius: 20,
-    borderWidth: 0.5,
+    borderWidth: 0,
     backgroundColor: "#E3E3E3",
     justifyContent: "flex-end",
     alignItems: "center",
@@ -290,11 +300,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
   },
   lightningIconContainer: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    left: 0,
-    bottom: 0,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -320,15 +325,19 @@ const styles = StyleSheet.create({
     color: "white",
   },
   priceContainer: {
+    flex: 1,
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
   swipeContainer: {
-    position: "absolute",
-    left: 20,
-    right: 20,
-    bottom: 20,
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  swipe: {
+    width: "100%",
   },
   smallLightText: {
     fontSize: 14,
@@ -344,8 +353,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   largeMediumText: {
-    fontSize: 32,
-    fontWeight: "medium",
+    fontSize: 28,
+    fontWeight: "400",
   },
   largeSemiboldText: {
     fontSize: 36,

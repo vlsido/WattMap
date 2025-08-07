@@ -9,6 +9,7 @@ import { Colors } from "@/constants/Colors";
 import { useRouter } from "expo-router";
 import { ConnectorType, Location } from "@/types/common";
 import { openNavigation } from "@/helpers/helperFunctions";
+import { useThemeColors } from "@/hooks/useThemeColors";
 
 interface LocationViewProps {
   location: Location | null;
@@ -16,6 +17,7 @@ interface LocationViewProps {
 
 function LocationView(props: LocationViewProps) {
   const router = useRouter();
+  const themeColors = useThemeColors();
 
   if (props.location === null) return null;
 
@@ -62,10 +64,13 @@ function LocationView(props: LocationViewProps) {
             }
           >
             <View style={styles.row}>
+              <ThemedText type="small">
+                {props.location.chargers.length}x
+              </ThemedText>
               <MaterialCommunityIcons
                 name="ev-station"
                 size={48}
-                color={"#1EE78D"}
+                color={themeColors.primaryGreen}
               />
               <View style={{ flexShrink: 1 }}>
                 <ThemedText type="subtitle">{props.location.name}</ThemedText>
@@ -109,12 +114,12 @@ function LocationView(props: LocationViewProps) {
           <ThemedTextButton
             text="Navigate"
             onPress={() => openNavigation(props.location!.point)}
-            lightColor={Colors.light.primaryGreen}
-            darkColor={Colors.dark.primaryGreen}
+            lightColor={themeColors.primaryGreen}
+            darkColor={themeColors.primaryGreen}
             style={styles.buttonContainer}
-            textStyle={styles.buttonText}
+            textStyle={[styles.buttonText, { color: themeColors.background }]}
             rightSideIcon="arrow-right"
-            rightSideIconColor="black"
+            rightSideIconColor={themeColors.background}
             rightSideIconSize={24}
           />
         </ThemedView>
@@ -146,6 +151,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
+    alignItems: "center",
   },
   headerText: {
     color: "white",
@@ -174,7 +180,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: "center",
-    color: "black",
     fontWeight: 600,
     fontSize: 18,
   },
