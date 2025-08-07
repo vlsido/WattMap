@@ -21,12 +21,7 @@ import Animated, {
 import { LightningIcon } from "@/components/ui/svgs/LightningIcon";
 import { Connector, Session } from "@/types/common";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  getSessionState,
-  startCharging,
-  stopCharging,
-  vehicle,
-} from "@/api/api";
+import { getSessionState, startCharging, stopCharging, user } from "@/api/api";
 import { notificationManager } from "@/managers/NotificationManager";
 
 export default function Charging() {
@@ -49,7 +44,7 @@ export default function Charging() {
         "my-vehicle-id",
         chargerId as string,
         connectorObject.id,
-        vehicle.initialSoC,
+        user.vehicle.initialSoC,
       ),
     onSuccess: (id) => setSessionId(id),
   });
@@ -88,15 +83,16 @@ export default function Charging() {
   });
 
   const currentEnergyKWh = session.data
-    ? vehicle.batteryCapacityKWh * (session.data.socCurrent / 100)
+    ? user.vehicle.batteryCapacityKWh * (session.data.socCurrent / 100)
     : 0;
-  const distanceKm = currentEnergyKWh / (vehicle.consumptionKWhPer100Km / 100);
+  const distanceKm =
+    currentEnergyKWh / (user.vehicle.consumptionKWhPer100Km / 100);
   const energyNeededKWh = session.data
-    ? vehicle.batteryCapacityKWh * ((100 - session.data.socCurrent) / 100)
+    ? user.vehicle.batteryCapacityKWh * ((100 - session.data.socCurrent) / 100)
     : 0;
   const chargingPowerKW = Math.min(
     connectorObject.maxPowerOutputKW,
-    vehicle.maxChargeKW,
+    user.vehicle.maxChargeKW,
   );
   const timeRemainingHours = energyNeededKWh / chargingPowerKW;
 

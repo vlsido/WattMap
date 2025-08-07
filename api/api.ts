@@ -6,12 +6,16 @@ import { Location, Session } from "@/types/common";
  */
 export const serverIp = "192.168.0.101";
 
-export const vehicle = {
-  name: "Tesla Model 3",
-  batteryCapacityKWh: 40,
-  consumptionKWhPer100Km: 17,
-  maxChargeKW: 50,
-  initialSoC: 40,
+export const user = {
+  firstName: "Vladislav",
+  lastName: "Sidorenko",
+  vehicle: {
+    name: "Tesla Model 3",
+    batteryCapacityKWh: 40,
+    consumptionKWhPer100Km: 17,
+    maxChargeKW: 50,
+    initialSoC: 40,
+  },
 };
 
 export async function fetchLocations(): Promise<Location[]> {
