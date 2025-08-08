@@ -1,7 +1,7 @@
 import { serverIp, user } from "@/api/api";
-import { ThemedPressable } from "@/components/ThemedPressable";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import { ThemedPressable } from "@/components/ui/themed/ThemedPressable";
+import { ThemedText } from "@/components/ui/themed/ThemedText";
+import { ThemedView } from "@/components/ui/themed/ThemedView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { LightningIcon } from "@/components/ui/svgs/LightningIcon";
 import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";

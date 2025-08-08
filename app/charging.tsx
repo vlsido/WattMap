@@ -1,4 +1,4 @@
-import { ThemedText } from "@/components/ThemedText";
+import { ThemedText } from "@/components/ui/themed/ThemedText";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import SwipeAction from "@/components/ui/SwipeAction";
+import SwipeAction from "@/components/ui/SwipeAction/SwipeAction";
 import { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { LightningIcon } from "@/components/ui/svgs/LightningIcon";
 import { Connector, Session } from "@/types/common";

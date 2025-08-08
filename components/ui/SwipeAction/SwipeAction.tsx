@@ -16,7 +16,7 @@ import Animated, {
   withTiming,
   runOnJS,
 } from "react-native-reanimated";
-import { IconSymbol } from "./IconSymbol";
+import { IconSymbol } from "../IconSymbol";
 import { AnimatedPressable } from "@/constants/AnimatedComponents";
 
 interface SwipeActionProps {
@@ -68,6 +68,7 @@ function SwipeAction(props: SwipeActionProps) {
   const swipePanGesture = useMemo(
     () =>
       Gesture.Pan()
+        .withTestId("swipe-gesture")
         .onChange((event) => {
           if (offsetX.value < 0) {
             offsetX.value = 0;
@@ -119,7 +120,10 @@ function SwipeAction(props: SwipeActionProps) {
     [handleSwipeEnd],
   );
 
-  const tapGesture = useMemo(() => Gesture.Tap().onEnd(showActivity), []);
+  const tapGesture = useMemo(
+    () => Gesture.Tap().withTestId("tap-gesture").onEnd(showActivity),
+    [],
+  );
 
   const composedGesture = Gesture.Exclusive(swipePanGesture, tapGesture);
 
@@ -179,6 +183,7 @@ function SwipeAction(props: SwipeActionProps) {
           },
         ]}
         onPress={showActivity}
+        accessibilityRole="button"
       >
         <Animated.Text style={[textAnimatedStyle, styles.text]}>
           {props.text}

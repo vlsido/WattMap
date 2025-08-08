@@ -1,6 +1,6 @@
 import { NotificationMessage } from "../types";
-import ErrorCard from "./ErrorCard";
-import InfoCard from "./InfoCard";
+import ErrorCard from "./ErrorCard/ErrorCard";
+import InfoCard from "./InfoCard/InfoCard";
 
 export interface NotificationCardProps extends NotificationMessage {
   onClose: (id: string) => void;

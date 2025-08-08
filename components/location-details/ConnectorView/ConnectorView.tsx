@@ -6,11 +6,11 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { StyleSheet, View } from "react-native";
-import { ThemedText } from "../ThemedText";
-import ConnectorIcon from "../connector/ConnectorIcon";
+import { ThemedText } from "../../ui/themed/ThemedText";
+import ConnectorIcon from "../../connector/ConnectorIcon/ConnectorIcon";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { IconSymbol } from "../ui/IconSymbol";
-import { ThemedPressable } from "../ThemedPressable";
+import { IconSymbol } from "../../ui/IconSymbol";
+import { ThemedPressable } from "../../ui/themed/ThemedPressable";
 import { Connector, ConnectorStatus, ConnectorType } from "@/types/common";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useEffect } from "react";
@@ -71,7 +71,6 @@ function ConnectorView(props: ConnectorProps) {
           borderColor: themeColors.border,
         },
       ]}
-      accessibilityRole="button"
       disabled={props.status !== "AVAILABLE"}
       onPress={() =>
         props.onSelect({
@@ -94,6 +93,7 @@ function ConnectorView(props: ConnectorProps) {
             }}
           >
             <Animated.View
+              testID={"ping-view"}
               style={[
                 styles.ellipse,
                 pingAnimatedStyle,
@@ -105,12 +105,12 @@ function ConnectorView(props: ConnectorProps) {
           </View>
           <ThemedText type="small">{props.status}</ThemedText>
         </View>
-        <View
-          style={[styles.row, styles.gap, !props.isSelected && { opacity: 0 }]}
-        >
-          <IconSymbol name="checkmark" size={24} color={themeColors.text} />
-          <ThemedText type="small">SELECTED</ThemedText>
-        </View>
+        {props.isSelected && (
+          <View style={[styles.row, styles.gap]}>
+            <IconSymbol name="checkmark" size={24} color={themeColors.text} />
+            <ThemedText type="small">SELECTED</ThemedText>
+          </View>
+        )}
       </View>
       <View style={[styles.row, styles.gap]}>
         <ConnectorIcon

@@ -1,11 +1,10 @@
 import { Pressable, StyleSheet, View } from "react-native";
 import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
-import { ThemedText } from "../ThemedText";
-import { ThemedView } from "../ThemedView";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import ConnectorIcon from "../connector/ConnectorIcon";
-import { ThemedTextButton } from "../ThemedTextButton";
-import { Colors } from "@/constants/Colors";
+import { ThemedText } from "../ui/themed/ThemedText";
+import { ThemedView } from "../ui/themed/ThemedView";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import ConnectorIcon from "../connector/ConnectorIcon/ConnectorIcon";
+import { ThemedTextButton } from "../ui/themed/ThemedTextButton";
 import { useRouter } from "expo-router";
 import { ConnectorType, Location } from "@/types/common";
 import { openNavigation } from "@/helpers/helperFunctions";
@@ -112,6 +111,7 @@ function LocationView(props: LocationViewProps) {
             </ThemedText>
           </Pressable>
           <ThemedTextButton
+            label="Navigate to location details"
             text="Navigate"
             onPress={() => openNavigation(props.location!.point)}
             lightColor={themeColors.primaryGreen}

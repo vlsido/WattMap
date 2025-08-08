@@ -15,9 +15,9 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { NotificationMessage } from "../types";
+import { NotificationMessage } from "../../types";
 
-interface ErrorCardProps extends NotificationMessage {
+export interface ErrorCardProps extends NotificationMessage {
   onClose: (id: string) => void;
 }
 
@@ -41,6 +41,8 @@ function ErrorCard(props: ErrorCardProps) {
       entering={FadeInRight}
       exiting={FadeOutRight}
       style={styles.container}
+      accessibilityRole={"button"}
+      accessibilityLabel={"Close the notification"}
       onPress={() => props.onClose(props.id)}
     >
       <View style={{ padding: 10 }}>
@@ -53,7 +55,10 @@ function ErrorCard(props: ErrorCardProps) {
           {props.text}
         </Text>
       </View>
-      <Animated.View style={[sliderAnimatedStyle, styles.slider]} />
+      <Animated.View
+        testID={"error-slider"}
+        style={[sliderAnimatedStyle, styles.slider]}
+      />
     </AnimatedPressable>
   );
 }

@@ -1,6 +1,6 @@
 import LocationListItem from "@/components/list/LocationListItem";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ui/themed/ThemedText";
+import { ThemedView } from "@/components/ui/themed/ThemedView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
@@ -12,7 +12,6 @@ import {
   SafeAreaView,
   StyleSheet,
   TextInput,
-  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

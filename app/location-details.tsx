@@ -1,7 +1,7 @@
 import ChargerView from "@/components/location-details/ChargerView/ChargerView";
-import SwipeAction from "@/components/ui/SwipeAction";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import SwipeAction from "@/components/ui/SwipeAction/SwipeAction";
+import { ThemedText } from "@/components/ui/themed/ThemedText";
+import { ThemedView } from "@/components/ui/themed/ThemedView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { Colors } from "@/constants/Colors";
 import { Connector, Location } from "@/types/common";
@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { ThemedPressable } from "@/components/ThemedPressable";
+import { ThemedPressable } from "@/components/ui/themed/ThemedPressable";
 
 export default function LocationDetails() {
   const { location, r } = useLocalSearchParams();

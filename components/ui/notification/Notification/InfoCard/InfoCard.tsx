@@ -1,9 +1,9 @@
 import { AnimatedPressable } from "@/constants/AnimatedComponents";
 import { FadeInDown, FadeOutDown } from "react-native-reanimated";
-import { NotificationMessage } from "../types";
+import { NotificationMessage } from "../../types";
 import { StyleSheet, Text } from "react-native";
 
-interface InfoCardProps extends NotificationMessage {
+export interface InfoCardProps extends NotificationMessage {
   onClose: (id: string) => void;
 }
 
@@ -13,6 +13,8 @@ function InfoCard(props: InfoCardProps) {
       style={styles.container}
       entering={FadeInDown}
       exiting={FadeOutDown}
+      accessibilityRole={"button"}
+      accessibilityLabel={"Close the notification"}
       onPress={() => props.onClose(props.id)}
     >
       <Text style={[styles.defaultText, styles.centerText]}>{props.text}</Text>

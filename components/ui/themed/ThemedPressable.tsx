@@ -20,6 +20,7 @@ export function ThemedPressable({
 
   return (
     <Pressable
+      accessibilityRole="button"
       style={(state) => {
         const { pressed } = state;
 

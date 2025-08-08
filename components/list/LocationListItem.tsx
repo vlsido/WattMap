@@ -1,11 +1,11 @@
 import { StyleSheet, View } from "react-native";
-import { ThemedView } from "../ThemedView";
-import { ThemedText } from "../ThemedText";
-import ConnectorIcon from "../connector/ConnectorIcon";
+import { ThemedView } from "../ui/themed/ThemedView";
+import { ThemedText } from "../ui/themed/ThemedText";
+import ConnectorIcon from "../connector/ConnectorIcon/ConnectorIcon";
 import { Colors } from "@/constants/Colors";
 import { IconSymbol } from "../ui/IconSymbol";
 import { ConnectorType, Location } from "@/types/common";
-import { ThemedPressable } from "../ThemedPressable";
+import { ThemedPressable } from "../ui/themed/ThemedPressable";
 import { openNavigation } from "@/helpers/helperFunctions";
 import { useRouter } from "expo-router";
 
