@@ -127,8 +127,11 @@ export default function Charging() {
 
   const handleDisconnect = useCallback(() => {
     stopCharging(sessionId);
-    router.dismissAll();
-  }, [sessionId]);
+    router.replace({
+      pathname: "/thank-you",
+      params: { cost: session.data?.price.toFixed(2) ?? 0 },
+    });
+  }, [sessionId, session.data]);
 
   return (
     <SafeAreaView
