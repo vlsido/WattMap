@@ -54,7 +54,6 @@ export default function ThankYou() {
           darkColor={Colors.dark.buttonBackground}
           style={[styles.button, styles.shadowMedium]}
           entering={FadeInDown.delay(2000).duration(500)}
-          type="buttonBackground"
           onPress={() => router.dismissTo("/")}
         >
           <ThemedText type="subtitle" colorType="buttonText">
