@@ -93,5 +93,15 @@ For this app to work you will need to run the [Express.js backend](https://githu
 
 ### Didn't have time to implement:
 
-- \*\*
-- **Higher test coverage**
+- **Seamless navigation without opening a separate Google/Apple Maps app (in-app navigation with directions)**
+- **Sorting chargers' locations by distance/connector types/availability**
+- **A better map marker (with number of chargers at a location, cluster markers when zoomed out, better scaling for different screen sizes)**
+- **Locking the 'in use' connector on the backend**
+- **Higher test coverage (especially start/stop charging flows)**
+
+### What could be improved or added in the future?
+
+- **WebSockets or other form of persistent connection to the backend**
+- **User authentication & accounts**
+- **Some kind of payment integration (to top up the account's balance, or pay for charging)**
+- **Push notifications (charging started/stopped, SOC related, specific charger availability)**
