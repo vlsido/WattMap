@@ -47,84 +47,86 @@ function LocationView(props: LocationViewProps) {
   );
 
   return (
-    <View style={styles.container} collapsableChildren={false}>
-      <Animated.View entering={FadeInDown} exiting={FadeOutDown}>
-        <ThemedView style={styles.cardContainer}>
-          <Pressable
-            style={({ pressed }) => [
-              { opacity: pressed ? 0.75 : 1 },
-              styles.bodyContainer,
-            ]}
-            onPress={() =>
-              router.navigate({
-                pathname: "/location-details",
-                params: { location: JSON.stringify(props.location) },
-              })
-            }
-          >
-            <View style={styles.row}>
-              <ThemedText type="small">
-                {props.location.chargers.length}x
-              </ThemedText>
-              <MaterialCommunityIcons
-                name="ev-station"
-                size={48}
-                color={themeColors.primaryGreen}
-              />
-              <View style={{ flexShrink: 1 }}>
-                <ThemedText type="subtitle">{props.location.name}</ThemedText>
-                <ThemedText type="default">{props.location.address}</ThemedText>
-              </View>
-            </View>
-            <ThemedView style={[styles.connectorsContainer]} type="border">
-              {availableByType.map((connector, index) => (
-                <View key={index}>
-                  <View style={[styles.connector, styles.row]}>
-                    <ThemedText type="small">
-                      {connector.available} / {connector.total}
-                    </ThemedText>
-                    <ConnectorIcon
-                      type={connector.connectorType}
-                      status={
-                        connector.available === 0 ? "UNAVAILABLE" : "AVAILABLE"
-                      }
-                      size={28}
-                    />
-                    <View>
-                      <ThemedText>{connector.connectorType}</ThemedText>
-                      <ThemedText style={{ opacity: 0.5 }} type="small">
-                        CONNECTOR TYPE
-                      </ThemedText>
-                    </View>
-                  </View>
-                  {index !== availableByType.length - 1 && (
-                    <ThemedView style={styles.separator} type="border" />
-                  )}
-                </View>
-              ))}
-            </ThemedView>
-            <ThemedText
-              style={{ opacity: 0.5, alignSelf: "center" }}
-              type="smallSemiBold"
-            >
-              press to open details
+    <Animated.View
+      style={styles.container}
+      entering={FadeInDown}
+      exiting={FadeOutDown}
+    >
+      <ThemedView style={styles.cardContainer}>
+        <Pressable
+          style={({ pressed }) => [
+            { opacity: pressed ? 0.75 : 1 },
+            styles.bodyContainer,
+          ]}
+          onPress={() =>
+            router.navigate({
+              pathname: "/location-details",
+              params: { location: JSON.stringify(props.location) },
+            })
+          }
+        >
+          <View style={styles.row}>
+            <ThemedText type="small">
+              {props.location.chargers.length}x
             </ThemedText>
-          </Pressable>
-          <ThemedTextButton
-            label="Navigate to location details"
-            text="Navigate"
-            onPress={() => openNavigation(props.location!.point)}
-            lightColor={themeColors.primaryGreen}
-            darkColor={themeColors.primaryGreen}
-            style={styles.buttonContainer}
-            textStyle={[styles.buttonText, { color: themeColors.background }]}
-            rightSideIcon="arrow-right"
-            rightSideIconColor={themeColors.background}
-            rightSideIconSize={24}
-          />
-        </ThemedView>
-      </Animated.View>
-    </View>
+            <MaterialCommunityIcons
+              name="ev-station"
+              size={48}
+              color={themeColors.primaryGreen}
+            />
+            <View style={{ flexShrink: 1 }}>
+              <ThemedText type="subtitle">{props.location.name}</ThemedText>
+              <ThemedText type="default">{props.location.address}</ThemedText>
+            </View>
+          </View>
+          <ThemedView style={[styles.connectorsContainer]} type="border">
+            {availableByType.map((connector, index) => (
+              <View key={index}>
+                <View style={[styles.connector, styles.row]}>
+                  <ThemedText type="small">
+                    {connector.available} / {connector.total}
+                  </ThemedText>
+                  <ConnectorIcon
+                    type={connector.connectorType}
+                    status={
+                      connector.available === 0 ? "UNAVAILABLE" : "AVAILABLE"
+                    }
+                    size={28}
+                  />
+                  <View>
+                    <ThemedText>{connector.connectorType}</ThemedText>
+                    <ThemedText style={{ opacity: 0.5 }} type="small">
+                      CONNECTOR TYPE
+                    </ThemedText>
+                  </View>
+                </View>
+                {index !== availableByType.length - 1 && (
+                  <ThemedView style={styles.separator} type="border" />
+                )}
+              </View>
+            ))}
+          </ThemedView>
+          <ThemedText
+            style={{ opacity: 0.5, alignSelf: "center" }}
+            type="smallSemiBold"
+          >
+            press to open details
+          </ThemedText>
+        </Pressable>
+        <ThemedTextButton
+          label="Navigate to location details"
+          text="Navigate"
+          onPress={() => openNavigation(props.location!.point)}
+          lightColor={themeColors.primaryGreen}
+          darkColor={themeColors.primaryGreen}
+          style={styles.buttonContainer}
+          textStyle={[styles.buttonText, { color: themeColors.background }]}
+          rightSideIcon="arrow-right"
+          rightSideIconColor={themeColors.background}
+          rightSideIconSize={24}
+        />
+      </ThemedView>
+    </Animated.View>
   );
 }
 
@@ -134,10 +136,13 @@ const styles = StyleSheet.create({
   container: {
     position: "absolute",
     bottom: 0,
-    left: 0,
-    right: 0,
+    left: "auto",
+    right: "auto",
+    maxWidth: 400,
+    width: "100%",
+    alignSelf: "center",
     marginVertical: 10,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   cardContainer: {
     maxWidth: 400,
