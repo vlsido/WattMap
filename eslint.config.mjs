@@ -10,6 +10,11 @@ export default [
   ...tseslint.configs.recommended,
   eslintConfigPrettierFlat,
   {
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+    },
+  },
+  {
     files: ["**/*.{jsx,ts,tsx}"],
     plugins: {
       react,
@@ -32,7 +37,6 @@ export default [
       "no-unreachable-loop": ["warn"],
       "no-invalid-regexp": ["error"],
       "react/react-in-jsx-scope": "off",
-      "@typescript-eslint/no-require-imports": "off",
     },
   },
   {
