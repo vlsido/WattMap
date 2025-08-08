@@ -1,3 +1,5 @@
+import { useCallback, useState } from "react";
+import { Image, SafeAreaView, Text, View, StyleSheet } from "react-native";
 import { serverIp, user } from "@/api/api";
 import { ThemedPressable } from "@/components/ui/themed/ThemedPressable";
 import { ThemedText } from "@/components/ui/themed/ThemedText";
@@ -8,15 +10,15 @@ import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { notificationManager } from "@/managers/NotificationManager";
 import { LinearGradient } from "expo-linear-gradient";
-import { useCallback } from "react";
-import { Image, SafeAreaView, Text, View } from "react-native";
-import { StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useFocusEffect } from "expo-router";
 
 const BATTERY_WIDTH = 40;
 const BATTERY_HEIGHT = 60;
 
 export default function Profile() {
+  const [socLevel, setSocLevel] = useState<number>(user.vehicle.initialSoC);
+
   const themeColors = useThemeColors();
   const insets = useSafeAreaInsets();
   const bottom = useBottomTabOverflow();
@@ -55,6 +57,12 @@ export default function Profile() {
   const onLogout = useCallback(() => {
     notificationManager.showUserMessage("Can't logout in development", "ERROR");
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      setSocLevel(user.vehicle.initialSoC);
+    }, [user.vehicle.initialSoC]),
+  );
 
   return (
     <SafeAreaView
@@ -100,7 +108,12 @@ export default function Profile() {
                 <View style={[styles.batteryHead]} />
                 <View style={[styles.batteryBody, styles.shadowMedium]}>
                   <LinearGradient
-                    style={[styles.batteryLevel]}
+                    style={[
+                      styles.batteryLevel,
+                      {
+                        height: (socLevel / 100) * BATTERY_HEIGHT,
+                      },
+                    ]}
                     colors={["#1EE78D", "#85ED06"]}
                   />
                   <View style={styles.lightningIconContainer}>
@@ -231,7 +244,6 @@ const styles = StyleSheet.create({
   },
   batteryLevel: {
     position: "absolute",
-    height: (user.vehicle.initialSoC / 100) * 64,
     bottom: 0,
     left: 0,
     right: 0,
