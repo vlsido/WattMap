@@ -1,11 +1,14 @@
 // Fallback for using MaterialIcons on Android and web.
 
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { SymbolWeight, SymbolViewProps } from 'expo-symbols';
-import { ComponentProps } from 'react';
-import { OpaqueColorValue, type StyleProp, type TextStyle } from 'react-native';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { SymbolWeight, SymbolViewProps } from "expo-symbols";
+import { ComponentProps } from "react";
+import { OpaqueColorValue, type StyleProp, type TextStyle } from "react-native";
 
-type IconMapping = Record<SymbolViewProps['name'], ComponentProps<typeof MaterialIcons>['name']>;
+type IconMapping = Record<
+  SymbolViewProps["name"],
+  ComponentProps<typeof MaterialCommunityIcons>["name"]
+>;
 type IconSymbolName = keyof typeof MAPPING;
 
 /**
@@ -14,10 +17,22 @@ type IconSymbolName = keyof typeof MAPPING;
  * - see SF Symbols in the [SF Symbols](https://developer.apple.com/sf-symbols/) app.
  */
 const MAPPING = {
-  'house.fill': 'home',
-  'paperplane.fill': 'send',
-  'chevron.left.forwardslash.chevron.right': 'code',
-  'chevron.right': 'chevron-right',
+  "map.fill": "map",
+  "list.bullet": "format-list-bulleted",
+  "person.crop.circle.fill": "account-circle",
+  "location.fill": "navigation-variant",
+  "banknote.fill": "cash",
+  "chevron.right": "chevron-right",
+  checkmark: "check",
+  magnifyingglass: "magnify",
+  pencil: "pencil",
+  "exclamationmark.triangle": "alert-outline",
+  "questionmark.circle": "crosshairs-question",
+  "rectangle.portrait.and.arrow.right": "logout",
+  "ev.charger.fill": "ev-station",
+  "ev.plug.ac.type.2.fill": "ev-plug-type2",
+  "ev.plug.dc.chademo.fill": "ev-plug-chademo",
+  "ev.plug.dc.ccs2.fill": "ev-plug-ccs2",
 } as IconMapping;
 
 /**
@@ -37,5 +52,12 @@ export function IconSymbol({
   style?: StyleProp<TextStyle>;
   weight?: SymbolWeight;
 }) {
-  return <MaterialIcons color={color} size={size} name={MAPPING[name]} style={style} />;
+  return (
+    <MaterialCommunityIcons
+      color={color}
+      size={size}
+      name={MAPPING[name]}
+      style={style}
+    />
+  );
 }
