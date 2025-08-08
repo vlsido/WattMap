@@ -13,7 +13,6 @@ export interface TextButtonProps {
   text: string;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
-  onPress: () => void;
   disabledBool?: boolean;
   customActivityIndicator?: React.ReactNode;
   isActivityIndicatorVisible?: boolean;
@@ -28,6 +27,7 @@ export interface TextButtonProps {
   rightSideIconSize?: number;
   rightSideIconColor?: string;
   numberOfLines?: number;
+  onPress?: () => void;
 }
 
 function TextButton(props: TextButtonProps) {
