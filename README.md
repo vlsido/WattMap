@@ -118,3 +118,6 @@ For this app to work you will need to run the [Express.js backend](https://githu
 - **Ability to add/change a user's car**
 - **Better error handling, custom Error functions with specific error codes**
 - **End-to-end testing**
+
+### Note
+Google Maps API key is restricted to one app and one API
