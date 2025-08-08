@@ -1,4 +1,4 @@
-# WattMap -- EV Charging App
+# WattMap — EV Charging App
 
 A mobile application built with **React Native** and **TypeScript** that simulates the management of electric vehicle charging stations.
 
@@ -93,15 +93,22 @@ For this app to work you will need to run the [Express.js backend](https://githu
 
 ### Didn't have time to implement:
 
-- **Seamless navigation without opening a separate Google/Apple Maps app (in-app navigation with directions)**
+- **Higher unit test coverage (especially start/stop charging flows)**
+- **Seamless navigation without opening a separate Google/Apple Maps app (in-app navigation with directions and live traffic)**
 - **Sorting chargers' locations by distance/connector types/availability**
-- **A better map marker (with number of chargers at a location, cluster markers when zoomed out, better scaling for different screen sizes)**
+- **Better map markers (with number of chargers at a location, cluster markers when zoomed out, better scaling for different screen sizes)**
 - **Locking the 'in use' connector on the backend**
-- **Higher test coverage (especially start/stop charging flows)**
+- **UI tweaks here and there**
+
 
 ### What could be improved or added in the future?
 
 - **WebSockets or other form of persistent connection to the backend**
+- **Cache last known chargers locations**
+- **Favourites/Recently used chargers**
 - **User authentication & accounts**
-- **Some kind of payment integration (to top up the account's balance, or pay for charging)**
+- **Payment API integration (to top up the account's balance, or pay for charging)**
 - **Push notifications (charging started/stopped, SOC related, specific charger availability)**
+- **Ability to add/change a user's car**
+- **Better error handling, custom Error functions with specific error codes**
+- **End-to-end testing**
