@@ -98,17 +98,23 @@ For this app to work you will need to run the [Express.js backend](https://githu
 - **Sorting chargers' locations by distance/connector types/availability**
 - **Better map markers (with number of chargers at a location, cluster markers when zoomed out, better scaling for different screen sizes)**
 - **Locking the 'in use' connector on the backend**
-- **UI tweaks here and there**
-
+- **UI/UX tweaks here and there**
 
 ### What could be improved or added in the future?
 
 - **WebSockets or other form of persistent connection to the backend**
+- **Charger reservation in advance**
+- **Charging preferences (e.g. charge to 80% max)**
+- **Location/Charger photos**
+- **Charger activity/demand times**
+- **Route planning (get to place X, visit charger locations along the way if needed)**
 - **Cache last known chargers locations**
 - **Favourites/Recently used chargers**
 - **User authentication & accounts**
 - **Payment API integration (to top up the account's balance, or pay for charging)**
-- **Push notifications (charging started/stopped, SOC related, specific charger availability)**
+- **Cost estimation**
+- **Gamification? (achievements, etc... not sure about that 🤔)**
+- **Push notifications (charging started/stopped, SOC related, specific charger availability, reservation reminders, etc)**
 - **Ability to add/change a user's car**
 - **Better error handling, custom Error functions with specific error codes**
 - **End-to-end testing**
