@@ -5,7 +5,7 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useLocations } from "@/hooks/useLocations";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -14,6 +14,7 @@ import {
   TextInput,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { notificationManager } from "@/managers/NotificationManager";
 
 export default function List() {
   const locations = useLocations();
@@ -29,6 +30,16 @@ export default function List() {
       loc.name.toLowerCase().includes(search.trim().toLowerCase()),
     );
   }, [locations.data, search]);
+
+  useEffect(() => {
+    if (locations.error) {
+      notificationManager.showUserMessage(
+        "Couldn't fetch EV charging locations: " + locations.error.message,
+        "ERROR",
+        5000,
+      );
+    }
+  }, [locations.error]);
 
   return (
     <SafeAreaView

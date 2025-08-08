@@ -5,10 +5,11 @@ import {
 } from "react-native-safe-area-context";
 import MapView, { Marker, Region } from "react-native-maps";
 import LocationView from "@/components/map/LocationView";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
 import { useLocations } from "@/hooks/useLocations";
 import { Location } from "@/types/common";
+import { notificationManager } from "@/managers/NotificationManager";
 
 const INITIAL_REGION: Region = {
   latitude: 59.441466,
@@ -26,6 +27,16 @@ export default function Index() {
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(
     null,
   );
+
+  useEffect(() => {
+    if (locations.error) {
+      notificationManager.showUserMessage(
+        "Couldn't fetch EV charging locations: " + locations.error.message,
+        "ERROR",
+        5000,
+      );
+    }
+  }, [locations.error]);
 
   return (
     <SafeAreaView

@@ -101,6 +101,16 @@ export default function Charging() {
   const batteryLevelHeight = useSharedValue<number>(user.vehicle.initialSoC);
 
   useEffect(() => {
+    if (session.error) {
+      notificationManager.showUserMessage(
+        "Session error: " + session.error.message,
+        "ERROR",
+        5000,
+      );
+    }
+  }, [session.error]);
+
+  useEffect(() => {
     batteryLevelHeight.value = session.data
       ? (session.data.socCurrent / 100) * (windowHeight / 5)
       : user.vehicle.initialSoC;
