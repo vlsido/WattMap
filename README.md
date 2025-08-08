@@ -88,3 +88,10 @@ For this app to work you will need to run the [Express.js backend](https://githu
    ```bash
    npm run test
    ```
+
+## Room for Improvements
+
+### Didn't have time to implement:
+
+- \*\*
+- **Higher test coverage**
